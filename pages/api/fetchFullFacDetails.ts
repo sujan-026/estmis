@@ -64,10 +64,10 @@ export default async function handler(req, res) {
       .input("employee_id", sql.NVarChar, employee_id)
       .query(personalDetailsQuery);
 
-    const academicDetailsResult = await pool
-      .request()
-      .input("employee_id", sql.NVarChar, employee_id)
-      .query(academicDetailsQuery);
+    // const academicDetailsResult = await pool
+    //   .request()
+    //   .input("employee_id", sql.NVarChar, employee_id)
+    //   .query(academicDetailsQuery);
 
     const educationDetailsResult = await pool
       .request()
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
 
     const response = {
       personalDetails: personalDetailsResult.recordset[0],
-      academicDetails: academicDetailsResult.recordset[0],
+      // academicDetails: academicDetailsResult.recordset[0],
       researchDetails: researchDetailsResult.recordset[0],
       educationDetails: educationDetailsResult.recordset[0]
     };

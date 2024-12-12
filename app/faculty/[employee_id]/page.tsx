@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import img from "../../assets/buddha.jpg";
 import { facultyResearchDetailsSchema } from "@/app/schemas/research-details";
+import { FacultyProfileNav } from "../../components/faculty/facultyProfileNav";
 
 interface FacultyDetails {
   id: number;
@@ -114,7 +115,7 @@ export default function FacultyDetailsPage() {
         const data = await response.json();
         console.log(data.educationDetails);
         setFacultyDetails(data.personalDetails);
-        setFacultyAcademicDetails(data.academicDetails);
+        // setFacultyAcademicDetails(data.academicDetails);
         setResearchDetails(data.researchDetails);
         setEducationDetails(data.educationDetails);
 
@@ -162,41 +163,31 @@ export default function FacultyDetailsPage() {
   return (
     <div>
       {/* <FacultyProfileNav /> */}
-      <nav className="bg-blue-600 p-4">
-        <ul className="flex space-x-4">
-          <li>
-            <a
-              href="/mis_faculty/faculty_home"
-              className="text-white hover:text-gray-300"
-            >
-              Home
-            </a>
-          </li>
-          <li>
-            <a
-              href="#personal-section"
-              className="text-white hover:text-gray-300"
-            >
-              Personal Information
-            </a>
-          </li>
-          <li>
-            <a
-              href="#academic-section"
-              className="text-white hover:text-gray-300"
-            >
-              Academic Details
-            </a>
-          </li>
-          <li>
-            <a
-              href="#research-section"
-              className="text-white hover:text-gray-300"
-            >
-              Research Details
-            </a>
-          </li>
-        </ul>
+      <nav className="flex items-center justify-end gap-4 mr-4 mt-2 text-xl text-blue-500 font-bold">
+        <a
+          className={`link hover:underline underline-offset-3`}
+          href="/mis_faculty/faculty_home"
+        >
+          Home
+        </a>
+        <a
+          className={`link hover:underline underline-offset-3`}
+          href="#personal-section"
+        >
+          Personal Details
+        </a>
+        <a
+          className={`link hover:underline underline-offset-3`}
+          href="#education-section"
+        >
+          Academic Details
+        </a>
+        <a
+          className={`link hover:underline underline-offset-3 `}
+          href="#research-section"
+        >
+          Research Details
+        </a>
       </nav>
 
       <div className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
@@ -373,6 +364,96 @@ export default function FacultyDetailsPage() {
             </p>
           </div> */}
           </div>
+
+          {/* Bank details */}
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Bank Details
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Bank Name</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.bankName || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Account Name</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.accountName || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Account Type</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.accountType || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Account Number</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.accountNo || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Branch</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.branch || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">IFSC</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.ifsc || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">PF Number</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.pfNumber || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">UAN Number</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.uanNumber || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Pension Number</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.pensionNumber || "N/A"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Family Details */}
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Family Details
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Mother's Name</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.motherName || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Father's Name</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.fatherName || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Spouse Name</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.spouseName || "N/A"}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Education Details */}
@@ -424,132 +505,6 @@ export default function FacultyDetailsPage() {
               <p className="text-sm text-gray-500">Year of Award</p>
               <p className="font-medium text-gray-800">
                 {educationDetails?.yearOfAward || "N/A"}
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Academic Details */}
-        <div
-          className="mt-8 pt-8 border-t border-gray-200"
-          id="academic-section"
-        >
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Academic Details
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Qualification</p>
-              <p className="font-medium text-gray-800">
-                {facultyAcademicDetails?.qualification || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Department</p>
-              <p className="font-medium text-gray-800">
-                {facultyAcademicDetails?.department || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Level</p>
-              <p className="font-medium text-gray-800">
-                {facultyAcademicDetails?.level || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Designation</p>
-              <p className="font-medium text-gray-800">
-                {facultyAcademicDetails?.designation || "N/A"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bank details */}
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Bank Details
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Bank Name</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.bankName || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Account Name</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.accountName || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Account Type</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.accountType || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Account Number</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.accountNo || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Branch</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.branch || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">IFSC</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.ifsc || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">PF Number</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.pfNumber || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">UAN Number</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.uanNumber || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Pension Number</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.pensionNumber || "N/A"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Family Details */}
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Family Details
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Mother's Name</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.motherName || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Father's Name</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.fatherName || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Spouse Name</p>
-              <p className="font-medium text-gray-800">
-                {facultyDetails.spouseName || "N/A"}
               </p>
             </div>
           </div>
