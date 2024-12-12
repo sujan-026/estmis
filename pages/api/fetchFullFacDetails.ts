@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     const pool = await connectToDatabase();
 
-    const query = `
+    const personalDetailsQuery = `
       SELECT 
         [id], [employee_id], [qualification], [department], [photo], [title], [faculty_name],
         [emailId], [contactNo], [alternateContactNo], [emergencyContactNo], [adharNo], [panNo],
@@ -29,16 +29,68 @@ export default async function handler(req, res) {
       WHERE [employee_id] = @employee_id
     `;
 
-    const result = await pool
+    const academicDetailsQuery = `
+      SELECT  
+       [qualification], [department], [level], [designation]
+      FROM [aittest].[dbo].[facultyAcademicDetails]
+      WHERE [employee_id] = @employee_id
+    `;
+
+     // Fetch faculty education details
+    const educationDetailsQuery = `
+      SELECT TOP (1000)
+        [id],
+        [employee_id],
+        [Program],
+        [regNo],
+        [schoolCollege],
+        [specialization],
+        [mediumOfInstruction],
+        [passClass],
+        [yearOfAward]
+      FROM [aittest].[dbo].[facultyEducation]
+      WHERE [employee_id] = @employee_id
+    `;
+
+     const researchDetailsQuery = `
+      SELECT TOP (1000) 
+       [employee_id], [orcidId], [googleScholarId], [scopusId], [publonsId], [researchId]
+      FROM [aittest].[dbo].[FacultyResearchDetails]
+      WHERE [employee_id] = @employee_id
+    `;
+
+    const personalDetailsResult = await pool
       .request()
       .input("employee_id", sql.NVarChar, employee_id)
-      .query(query);
+      .query(personalDetailsQuery);
 
-    if (result.recordset.length === 0) {
+    const academicDetailsResult = await pool
+      .request()
+      .input("employee_id", sql.NVarChar, employee_id)
+      .query(academicDetailsQuery);
+
+    const educationDetailsResult = await pool
+      .request()
+      .input("employee_id", sql.NVarChar, employee_id)
+      .query(educationDetailsQuery);
+
+    const researchDetailsResult = await pool
+      .request()
+      .input("employee_id", sql.NVarChar, employee_id)
+      .query(researchDetailsQuery);
+
+    if (personalDetailsResult.recordset.length === 0 && academicDetailsResult.recordset.length === 0 && researchDetailsResult.recordset.length === 0 && educationDetailsResult.recordset.length === 0) {
       return res.status(404).json({ error: "Faculty not found" });
     }
 
-    return res.status(200).json(result.recordset[0]);
+    const response = {
+      personalDetails: personalDetailsResult.recordset[0],
+      academicDetails: academicDetailsResult.recordset[0],
+      researchDetails: researchDetailsResult.recordset[0],
+      educationDetails: educationDetailsResult.recordset[0]
+    };
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching faculty details:", error);
     return res.status(500).json({ error: "Failed to fetch faculty details" });

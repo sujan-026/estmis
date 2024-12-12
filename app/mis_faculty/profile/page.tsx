@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter, notFound } from "next/navigation";
 import { FacultyProfileNav } from "../../components/faculty/facultyProfileNav";
+
 // import image from "@/assets/image.jpg";
 import Image from "next/image";
 export default function FacultyProfile() {
@@ -63,15 +64,26 @@ const [facultyEducationDetails, setFacultyEducationDetails] = useState<{
     };
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams(); // For fetching query parameters
+  // const [facultyId, setFacultyId] = useState(true);
   const router = useRouter(); // New router from `next/navigation`
+  
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const id = sessionStorage.getItem("emp_id");
+  //     if (id) {
+  //       setFacultyId(id);
+  //     } else {
+  //       console.log("Id not found in session");
+  //     }
+  //   }
+  // }, []);
+
+  const facultyId = sessionStorage.getItem("emp_id");
+  console.log(facultyId);
 
   useEffect(() => {
     async function fetchFacultyDetails() {
       try {
-        const token = localStorage.getItem("token");
-        const facultyId = token ? JSON.parse(token).facultyId : null;
-        console.log(facultyId);
         if (!facultyId) {
           notFound();
           return;
@@ -84,7 +96,7 @@ const [facultyEducationDetails, setFacultyEducationDetails] = useState<{
         );
         
         if (!response.ok || !response1.ok) {
-          router.push(`/faculty/faculty_reg?facultyId=${facultyId}`);
+          router.push(`/faculty/${facultyId}`);
           return;
         }
         const data = await response.json();

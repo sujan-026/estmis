@@ -253,7 +253,7 @@ const HorizontalNavbar: React.FC = () => {
                 <span className="text-sm">Profile</span>
                 {openMenu === "Profile" ? <FaChevronUp /> : <FaChevronDown />}
               </div>
-              {openMenu === "Profile" && (
+              {/* {openMenu === "Profile" && (
                 <ul className="absolute left-0 bg-white text-black mt-2 shadow-lg rounded z-50">
                   {[
                     {
@@ -267,6 +267,31 @@ const HorizontalNavbar: React.FC = () => {
                     {
                       label: "Research",
                       href: "/mis_faculty/profile/research-details",
+                    },
+                  ].map((item) => (
+                    <li
+                      key={item.label}
+                      className="hover:bg-gray-200 px-4 py-2 whitespace-nowrap"
+                    >
+                      <Link href={item.href}>{item.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )} */}
+              {openMenu === "Profile" && (
+                <ul className="absolute left-0 bg-white text-black mt-2 shadow-lg rounded z-50">
+                  {[
+                    {
+                      label: "Personal",
+                      href: "/mis_faculty/profile",
+                    },
+                    {
+                      label: "Academics",
+                      href: "/mis_faculty/profile",
+                    },
+                    {
+                      label: "Research",
+                      href: "/mis_faculty/profile",
                     },
                   ].map((item) => (
                     <li
