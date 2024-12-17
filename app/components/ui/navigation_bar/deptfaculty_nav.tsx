@@ -231,6 +231,10 @@ const HorizontalNavbar: React.FC = () => {
                       label: "Transfer Certificate",
                       href: "/admission/adm_certificate_tc",
                     },
+                    {
+                      label: "Update Research",
+                      href: "/mis_faculty/profile/research-update",
+                    },
                   ].map((item) => (
                     <li
                       key={item.label}

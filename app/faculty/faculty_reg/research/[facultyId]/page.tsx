@@ -33,12 +33,13 @@ const steps: Step[] = [
       "internationalJournalDetailsSchema",
       "nationalConferenceDetailsSchema",
       "internationalConferenceDetailsSchema",
-       "researchGrantsSchema", 
-       "consultancySchema",
-        "patentsSchema"
-        ,"researchScholarDetailsSchema"
-        ,"publicationsSchema"
-      ,"professionalMembershipsSchema"],
+      "researchGrantsSchema",
+      "consultancySchema",
+      "patentsSchema",
+      "researchScholarDetailsSchema",
+      "publicationsSchema",
+      "professionalMembershipsSchema",
+    ],
   },
   { id: "Step 8", name: "Complete", fields: [] },
 ];
@@ -69,7 +70,6 @@ export default function Form() {
     append: appendNationalJournal,
     remove: removeNationalJournal,
   } = useFieldArray({ control, name: "nationalJournalDetailsSchema" });
-  
 
   const {
     fields: eventsAttended,
@@ -124,7 +124,7 @@ export default function Form() {
     remove: removePatents,
   } = useFieldArray({ control, name: "patentsSchema" });
   const {
-    fields:professionalMembership,
+    fields: professionalMembership,
     append: appendProfessionalMembership,
     remove: removeProfessionalMembership,
   } = useFieldArray({ control, name: "professionalMembershipSchema" });
@@ -144,26 +144,26 @@ export default function Form() {
   // const emp_id = sessionStorage.getItem('emp_id');
   // const facultyId= emp_id;
 
-//   const facultyId = searchParams.get("facultyId");
-//   useEffect(() => {
-//     if (!facultyId) {
-//       alert("Faculty ID is missing. Redirecting...");
-//       router.push("/"); // Redirect to the dashboard or relevant page
-//     }
-//   }, [facultyId, router]);
+  //   const facultyId = searchParams.get("facultyId");
+  //   useEffect(() => {
+  //     if (!facultyId) {
+  //       alert("Faculty ID is missing. Redirecting...");
+  //       router.push("/"); // Redirect to the dashboard or relevant page
+  //     }
+  //   }, [facultyId, router]);
 
-useEffect(() => {
-  const pathname = window.location.pathname; // Get the full path
-  const segments = pathname.split("/"); // Split path into segments
-  const idFromPath = segments[segments.length - 1]; // Get the last segment (facultyId)
-  console.log(idFromPath);
-  if (idFromPath) {
-    setFacultyId(idFromPath);
-  } else {
-    console.warn("Faculty ID is not present in the dynamic route.");
-  }
-}, []);
-  
+  useEffect(() => {
+    const pathname = window.location.pathname; // Get the full path
+    const segments = pathname.split("/"); // Split path into segments
+    const idFromPath = segments[segments.length - 1]; // Get the last segment (facultyId)
+    console.log(idFromPath);
+    if (idFromPath) {
+      setFacultyId(idFromPath);
+    } else {
+      console.warn("Faculty ID is not present in the dynamic route.");
+    }
+  }, []);
+
   const processForm: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
     const submitresearch = await axios.post("/api/facultyresearchdetails", {
@@ -191,11 +191,11 @@ useEffect(() => {
 
   const nextButtonFunction = async () => {
     const fields = steps[currentStep].fields;
-  
+
     const output = await trigger(fields as FieldName[], { shouldFocus: true });
-  
+
     if (!output) return; // Prevent navigation if validation fails
-  
+
     if (currentStep < steps.length - 1) {
       setPreviousStep(currentStep);
       setCurrentStep((step) => step + 1);
@@ -208,17 +208,31 @@ useEffect(() => {
       setCurrentStep((step) => step - 1);
     }
   };
-  const [nationalJournalState, setNationalJournalState] = useState<Inputs["nationalJournalDetailsSchema"]>([]);
-  const [internationalJournalState, setInternationalJournalState] = useState<Inputs["internationalJournalDetailsSchema"]>([]);
-  const [nationalConferenceState, setNationalConferenceState] = useState<Inputs["nationalConferenceDetailsSchema"]>([]);
-  const [internationalConferenceState, setInternationalConferenceState] = useState<Inputs["internationalConferenceDetailsSchema"]>([]);
-  const [Publication,setPublication] = useState<Inputs["publicationsSchema"]>([]);
-  function removeAuthor(journalIndex : any, authorIndex : any , rest: any , state :any) {
+  const [nationalJournalState, setNationalJournalState] = useState<
+    Inputs["nationalJournalDetailsSchema"]
+  >([]);
+  const [internationalJournalState, setInternationalJournalState] = useState<
+    Inputs["internationalJournalDetailsSchema"]
+  >([]);
+  const [nationalConferenceState, setNationalConferenceState] = useState<
+    Inputs["nationalConferenceDetailsSchema"]
+  >([]);
+  const [internationalConferenceState, setInternationalConferenceState] =
+    useState<Inputs["internationalConferenceDetailsSchema"]>([]);
+  const [Publication, setPublication] = useState<Inputs["publicationsSchema"]>(
+    []
+  );
+  function removeAuthor(
+    journalIndex: any,
+    authorIndex: any,
+    rest: any,
+    state: any
+  ) {
     const updatedNationalJournal = [...rest];
     updatedNationalJournal[journalIndex].authors.splice(authorIndex, 1);
     state(updatedNationalJournal);
   }
-  function appendAuthor(journalIndex: any, rest :any ,state :any) {
+  function appendAuthor(journalIndex: any, rest: any, state: any) {
     const updatedNationalJournal = [...rest];
     if (!updatedNationalJournal[journalIndex].authors) {
       updatedNationalJournal[journalIndex].authors = [];
@@ -239,8 +253,6 @@ useEffect(() => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
-
               >
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   Faculty Research Details
@@ -253,7 +265,7 @@ useEffect(() => {
                     type="text"
                   />
 
-                 <FormField
+                  <FormField
                     label="Google Scholar ID"
                     stepsReference="facultyResearchSchema.googleScholarId"
                     type="text"
@@ -292,77 +304,78 @@ useEffect(() => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
               >
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   National Journal Details
                 </h2>
                 {nationalJournal.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-                    >
-                      <FormField
-                        label="Title Of Research Paper"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].titleOfResearchPaper`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Name Of Journal"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].joConName`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Volume"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].volume`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Issue No"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].issueNo`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Year Of Publication"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].yearOfPublication`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Number of Pages"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].pageNo`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Sponsor"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].sponsor`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Venue"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].venue`}
-                        type="text"
-                      />
-                      <FormField
-                        label="DOI"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].doi`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Quartile"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].quartile`}
-                        type="text"
-                      />
-                      <FormField
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                  >
+                    <FormField
+                      label="Title Of Research Paper"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].titleOfResearchPaper`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Name Of Journal"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].joConName`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Volume"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].volume`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Issue No"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].issueNo`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Year Of Publication"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].yearOfPublication`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Number of Pages"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].pageNo`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Sponsor"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].sponsor`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Venue"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].venue`}
+                      type="text"
+                    />
+                    <FormField
+                      label="DOI"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].doi`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Quartile"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].quartile`}
+                      type="text"
+                    />
+                    <FormField
                       label="ISSN"
                       stepsReference={`nationalJournalDetailsSchema[${index}].issn`}
                       type="text"
                     />
 
-
-                      {/* Author List Section */}
-                      <div className="col-span-2">
-                        <h3 className="text-sm font-medium text-gray-700 mb-2">Authors</h3>
-                        {field.authors?.map((author : String, authorIndex: any) => (
+                    {/* Author List Section */}
+                    <div className="col-span-2">
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Authors
+                      </h3>
+                      {field.authors?.map(
+                        (author: String, authorIndex: any) => (
                           <div
                             key={authorIndex}
                             className="flex items-center space-x-4 mb-2"
@@ -378,164 +391,175 @@ useEffect(() => {
                             <button
                               type="button"
                               onClick={() =>
-                                removeAuthor(index, authorIndex, nationalJournal, setNationalJournalState)
+                                removeAuthor(
+                                  index,
+                                  authorIndex,
+                                  nationalJournal,
+                                  setNationalJournalState
+                                )
                               }
                               className="text-red-500 text-sm"
                             >
                               Remove
                             </button>
                           </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            appendAuthor(index, nationalJournal, setNationalJournalState)
-                          }
-                          className="text-blue-500 text-sm"
-                        >
-                          + Add Author
-                        </button>
-                      </div>
-
-                      {/* Published Under */}
-                      <div>
-                        <label
-                          htmlFor={`nationalJournalDetailsSchema.${index}.publishedUnder`}
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Published Under
-                        </label>
-                        <select
-                          id={`nationalJournalDetailsSchema.${index}.publishedUnder`}
-                          {...register(
-                            `nationalJournalDetailsSchema.${index}.publishedUnder`
-                          )}
-                          className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
-                        >
-                          <option value="Web of Science">Web of Science</option>
-                          <option value="Scopus">Scopus</option>
-                          <option value="Q1">Q1</option>
-                          <option value="Q2">Q2</option>
-                          <option value="Q3">Q3</option>
-                        </select>
-                      </div>
-
-                      <FormField
-                        label="Impact Factor"
-                        stepsReference={`nationalJournalDetailsSchema[${index}].impactFactor`}
-                        type="number"
-                      />
-
-                      {/* Remove National Journal */}
-                      <div className="col-span-2 flex justify-end">
-                        <button
-                          type="button"
-                          onClick={() => removeNationalJournal(index)}
-                          className="text-red-500 text-sm"
-                        >
-                          Remove Journal
-                        </button>
-                      </div>
+                        )
+                      )}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          appendAuthor(
+                            index,
+                            nationalJournal,
+                            setNationalJournalState
+                          )
+                        }
+                        className="text-blue-500 text-sm"
+                      >
+                        + Add Author
+                      </button>
                     </div>
-                  ))}
 
-                  {/* Add New National Journal */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      appendNationalJournal({
-                        titleOfResearchPaper: "",
-                        joConName: "",
-                        issn : "",
-                        volume: "",
-                        issueNo: "",
-                        yearOfPublication: "",
-                        pageNo: "",
-                        authors: [], // Initialize authors as an empty array
-                        publishedUnder: "Web of Science",
-                        impactFactor: "",
-                        quartile: "",
-                        sponsor: "",
-                        venue: "",
-                        doi: "",
-                      })
-                    }
-                    className="text-blue-500 text-sm"
-                  >
-                    + Add a National Journal Publication
-                  </button>
+                    {/* Published Under */}
+                    <div>
+                      <label
+                        htmlFor={`nationalJournalDetailsSchema.${index}.publishedUnder`}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Published Under
+                      </label>
+                      <select
+                        id={`nationalJournalDetailsSchema.${index}.publishedUnder`}
+                        {...register(
+                          `nationalJournalDetailsSchema.${index}.publishedUnder`
+                        )}
+                        className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
+                      >
+                        <option value="Web of Science">Web of Science</option>
+                        <option value="Scopus">Scopus</option>
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                      </select>
+                    </div>
 
+                    <FormField
+                      label="Impact Factor"
+                      stepsReference={`nationalJournalDetailsSchema[${index}].impactFactor`}
+                      type="number"
+                    />
+
+                    {/* Remove National Journal */}
+                    <div className="col-span-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeNationalJournal(index)}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove Journal
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Add New National Journal */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    appendNationalJournal({
+                      titleOfResearchPaper: "",
+                      joConName: "",
+                      issn: "",
+                      volume: "",
+                      issueNo: "",
+                      yearOfPublication: "",
+                      pageNo: "",
+                      authors: [], // Initialize authors as an empty array
+                      publishedUnder: "Web of Science",
+                      impactFactor: "",
+                      quartile: "",
+                      sponsor: "",
+                      venue: "",
+                      doi: "",
+                    })
+                  }
+                  className="text-blue-500 text-sm"
+                >
+                  + Add a National Journal Publication
+                </button>
 
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   International Journal Details
                 </h2>
 
                 {internationalJournal.map((field, index) => (
-                      <div
-                      key={field.id}
-                      className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-                    >
-                      <FormField
-                        label="Title Of Research Paper"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].titleOfResearchPaper`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Name Of Journal"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].joConName`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Volume"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].volume`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Issue No"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].issueNo`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Year Of Publication"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].yearOfPublication`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Number of Pages"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].pageNo`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Sponsor"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].sponsor`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Venue"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].venue`}
-                        type="text"
-                      />
-                      <FormField
-                        label="DOI"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].doi`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Quartile"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].quartile`}
-                        type="text"
-                      />
-                      <FormField
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                  >
+                    <FormField
+                      label="Title Of Research Paper"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].titleOfResearchPaper`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Name Of Journal"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].joConName`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Volume"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].volume`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Issue No"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].issueNo`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Year Of Publication"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].yearOfPublication`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Number of Pages"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].pageNo`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Sponsor"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].sponsor`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Venue"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].venue`}
+                      type="text"
+                    />
+                    <FormField
+                      label="DOI"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].doi`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Quartile"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].quartile`}
+                      type="text"
+                    />
+                    <FormField
                       label="ISSN"
                       stepsReference={`internationalJournalDetailsSchema[${index}].issn`}
                       type="text"
                     />
 
-
-                      {/* Author List Section */}
-                      <div className="col-span-2">
-                        <h3 className="text-sm font-medium text-gray-700 mb-2">Authors</h3>
-                        {field.authors?.map((author : String, authorIndex: any) => (
+                    {/* Author List Section */}
+                    <div className="col-span-2">
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Authors
+                      </h3>
+                      {field.authors?.map(
+                        (author: String, authorIndex: any) => (
                           <div
                             key={authorIndex}
                             className="flex items-center space-x-4 mb-2"
@@ -551,85 +575,93 @@ useEffect(() => {
                             <button
                               type="button"
                               onClick={() =>
-                                removeAuthor(index, authorIndex, internationalJournal, setInternationalJournalState)
+                                removeAuthor(
+                                  index,
+                                  authorIndex,
+                                  internationalJournal,
+                                  setInternationalJournalState
+                                )
                               }
                               className="text-red-500 text-sm"
                             >
                               Remove
                             </button>
                           </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            appendAuthor(index, internationalJournal, setInternationalJournalState)
-                          }
-                          className="text-blue-500 text-sm"
-                        >
-                          + Add Author
-                        </button>
-
-                      </div>
-                      
-
-                      {/* Published Under */}
-                      <div>
-                        <label
-                          htmlFor={`internationalJournalDetailsSchema.${index}.publishedUnder`}
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Published Under
-                        </label>
-                        <select
-                          id={`internationalJournalDetailsSchema.${index}.publishedUnder`}
-                          {...register(
-                            `internationalJournalDetailsSchema.${index}.publishedUnder`
-                          )}
-                          className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
-                        >
-                          <option value="Web of Science">Web of Science</option>
-                          <option value="Scopus">Scopus</option>
-                          <option value="Q1">Q1</option>
-                          <option value="Q2">Q2</option>
-                          <option value="Q3">Q3</option>
-                        </select>
-                      </div>
-
-                      <FormField
-                        label="Impact Factor"
-                        stepsReference={`internationalJournalDetailsSchema[${index}].impactFactor`}
-                        type="number"
-                      />
-
-                      {/* Remove National Journal */}
-                      <div className="col-span-2 flex justify-end">
-                        <button
-                          type="button"
-                          onClick={() => removeInternationalJournal(index)}
-                          className="text-red-500 text-sm"
-                        >
-                          Remove Journal
-                        </button>
-                      </div>
+                        )
+                      )}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          appendAuthor(
+                            index,
+                            internationalJournal,
+                            setInternationalJournalState
+                          )
+                        }
+                        className="text-blue-500 text-sm"
+                      >
+                        + Add Author
+                      </button>
                     </div>
+
+                    {/* Published Under */}
+                    <div>
+                      <label
+                        htmlFor={`internationalJournalDetailsSchema.${index}.publishedUnder`}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Published Under
+                      </label>
+                      <select
+                        id={`internationalJournalDetailsSchema.${index}.publishedUnder`}
+                        {...register(
+                          `internationalJournalDetailsSchema.${index}.publishedUnder`
+                        )}
+                        className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
+                      >
+                        <option value="Web of Science">Web of Science</option>
+                        <option value="Scopus">Scopus</option>
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                      </select>
+                    </div>
+
+                    <FormField
+                      label="Impact Factor"
+                      stepsReference={`internationalJournalDetailsSchema[${index}].impactFactor`}
+                      type="number"
+                    />
+
+                    {/* Remove National Journal */}
+                    <div className="col-span-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeInternationalJournal(index)}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove Journal
+                      </button>
+                    </div>
+                  </div>
                 ))}
                 <button
                   type="button"
                   onClick={() =>
                     appendInternationalJournal({
-                        titleOfResearchPaper: "",
-                        joConName: "",
-                        volume: "",
-                        issueNo: "",
-                        yearOfPublication: "",
-                        pageNo: "",
-                        authors: [], // Initialize authors as an empty array
-                        publishedUnder: "Web of Science",
-                        impactFactor: "",
-                        quartile: "",
-                        sponsor: "",
-                        venue: "",
-                        doi: "",
+                      titleOfResearchPaper: "",
+                      joConName: "",
+                      volume: "",
+                      issueNo: "",
+                      yearOfPublication: "",
+                      pageNo: "",
+                      authors: [], // Initialize authors as an empty array
+                      publishedUnder: "Web of Science",
+                      impactFactor: "",
+                      quartile: "",
+                      sponsor: "",
+                      venue: "",
+                      doi: "",
                     })
                   }
                   className="text-blue-500 text-sm"
@@ -645,155 +677,164 @@ useEffect(() => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
               >
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   National Conference Details
                 </h2>
 
                 {nationalConference.map((field, index) => (
-                           <div
-                           key={field.id}
-                           className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-                         >
-                           <FormField
-                             label="Title Of Research Paper"
-                             stepsReference={`nationalConferenceDetailsSchema[${index}].titleOfResearchPaper`}
-                             type="text"
-                           />
-                           
-                      <FormField
-                        label="Name Of Journal"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].joConName`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Volume"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].volume`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Issue No"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].issueNo`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Year Of Publication"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].yearOfPublication`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Number of Pages"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].pageNo`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Sponsor"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].sponsor`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Venue"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].venue`}
-                        type="text"
-                      />
-                      <FormField
-                        label="DOI"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].doi`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Quartile"
-                        stepsReference={`nationalConferenceDetailsSchema[${index}].quartile`}
-                        type="text"
-                      />
-                      <FormField
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                  >
+                    <FormField
+                      label="Title Of Research Paper"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].titleOfResearchPaper`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="Name Of Journal"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].joConName`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Volume"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].volume`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Issue No"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].issueNo`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Year Of Publication"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].yearOfPublication`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Number of Pages"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].pageNo`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Sponsor"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].sponsor`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Venue"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].venue`}
+                      type="text"
+                    />
+                    <FormField
+                      label="DOI"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].doi`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Quartile"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].quartile`}
+                      type="text"
+                    />
+                    <FormField
                       label="ISSN"
                       stepsReference={`nationalConferenceDetailsSchema[${index}].issn`}
                       type="text"
                     />
 
-     
-                           {/* Author List Section */}
-                           <div className="col-span-2">
-                             <h3 className="text-sm font-medium text-gray-700 mb-2">Authors</h3>
-                             {field.authors?.map((author : String, authorIndex: any) => (
-                               <div
-                                 key={authorIndex}
-                                 className="flex items-center space-x-4 mb-2"
-                               >
-                                 <input
-                                   type="text"
-                                   placeholder={`Author ${authorIndex + 1}`}
-                                   {...register(
-                                     `nationalConferenceDetailsSchema.${index}.authors.${authorIndex}`
-                                   )}
-                                   className="flex-1 p-2 border rounded-md"
-                                 />
-                                 <button
-                                   type="button"
-                                   onClick={() =>
-                                    removeAuthor(index, authorIndex, nationalConference, setNationalConferenceState)
+                    {/* Author List Section */}
+                    <div className="col-span-2">
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Authors
+                      </h3>
+                      {field.authors?.map(
+                        (author: String, authorIndex: any) => (
+                          <div
+                            key={authorIndex}
+                            className="flex items-center space-x-4 mb-2"
+                          >
+                            <input
+                              type="text"
+                              placeholder={`Author ${authorIndex + 1}`}
+                              {...register(
+                                `nationalConferenceDetailsSchema.${index}.authors.${authorIndex}`
+                              )}
+                              className="flex-1 p-2 border rounded-md"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeAuthor(
+                                  index,
+                                  authorIndex,
+                                  nationalConference,
+                                  setNationalConferenceState
+                                )
                               }
-                                   className="text-red-500 text-sm"
-                                 >
-                                   Remove
-                                 </button>
-                               </div>
-                             ))}
-                             <button
-                               type="button"
-                               onClick={() =>
-                                appendAuthor(index, nationalConference, setNationalConferenceState)
-                                   }
-                               className="text-blue-500 text-sm"
-                             >
-                               + Add Author
-                             </button>
-     
-                           </div>
-                           
-     
-                           {/* Published Under */}
-                           <div>
-                             <label
-                               htmlFor={`nationalConferenceDetailsSchema.${index}.publishedUnder`}
-                               className="block text-sm font-medium text-gray-700"
-                             >
-                               Published Under
-                             </label>
-                             <select
-                               id={`nationalConferenceDetailsSchema.${index}.publishedUnder`}
-                               {...register(
-                                 `nationalConferenceDetailsSchema.${index}.publishedUnder`
-                               )}
-                               className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
-                             >
-                               <option value="Web of Science">Web of Science</option>
-                               <option value="Scopus">Scopus</option>
-                               <option value="Q1">Q1</option>
-                               <option value="Q2">Q2</option>
-                               <option value="Q3">Q3</option>
-                             </select>
-                           </div>
-     
-                           <FormField
-                             label="Impact Factor"
-                             stepsReference={`nationalConferenceDetailsSchema[${index}].impactFactor`}
-                             type="number"
-                           />
-     
-                           {/* Remove National Journal */}
-                           <div className="col-span-2 flex justify-end">
-                             <button
-                               type="button"
-                               onClick={() => removeNationalConference(index)}
-                               className="text-red-500 text-sm"
-                             >
-                               Remove Conference
-                             </button>
-                           </div>
-                         </div>
+                              className="text-red-500 text-sm"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )
+                      )}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          appendAuthor(
+                            index,
+                            nationalConference,
+                            setNationalConferenceState
+                          )
+                        }
+                        className="text-blue-500 text-sm"
+                      >
+                        + Add Author
+                      </button>
+                    </div>
+
+                    {/* Published Under */}
+                    <div>
+                      <label
+                        htmlFor={`nationalConferenceDetailsSchema.${index}.publishedUnder`}
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Published Under
+                      </label>
+                      <select
+                        id={`nationalConferenceDetailsSchema.${index}.publishedUnder`}
+                        {...register(
+                          `nationalConferenceDetailsSchema.${index}.publishedUnder`
+                        )}
+                        className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
+                      >
+                        <option value="Web of Science">Web of Science</option>
+                        <option value="Scopus">Scopus</option>
+                        <option value="Q1">Q1</option>
+                        <option value="Q2">Q2</option>
+                        <option value="Q3">Q3</option>
+                      </select>
+                    </div>
+
+                    <FormField
+                      label="Impact Factor"
+                      stepsReference={`nationalConferenceDetailsSchema[${index}].impactFactor`}
+                      type="number"
+                    />
+
+                    {/* Remove National Journal */}
+                    <div className="col-span-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeNationalConference(index)}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove Conference
+                      </button>
+                    </div>
+                  </div>
                 ))}
 
                 <button
@@ -825,7 +866,7 @@ useEffect(() => {
                 </h2>
 
                 {internationalConference.map((field, index) => (
-                    <div
+                  <div
                     key={field.id}
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2"
                   >
@@ -835,92 +876,101 @@ useEffect(() => {
                       type="text"
                     />
 
-                      <FormField
-                        label="Name Of Journal"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].joConName`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Volume"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].volume`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Issue No"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].issueNo`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Year Of Publication"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].yearOfPublication`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Number of Pages"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].pageNo`}
-                        type="number"
-                      />
-                      <FormField
-                        label="Sponsor"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].sponsor`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Venue"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].venue`}
-                        type="text"
-                      />
-                      <FormField
-                        label="DOI"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].doi`}
-                        type="text"
-                      />
-                      <FormField
-                        label="Quartile"
-                        stepsReference={`internationalConferenceDetailsSchema[${index}].quartile`}
-                        type="text"
-                      />
-                      <FormField
+                    <FormField
+                      label="Name Of Journal"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].joConName`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Volume"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].volume`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Issue No"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].issueNo`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Year Of Publication"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].yearOfPublication`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Number of Pages"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].pageNo`}
+                      type="number"
+                    />
+                    <FormField
+                      label="Sponsor"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].sponsor`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Venue"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].venue`}
+                      type="text"
+                    />
+                    <FormField
+                      label="DOI"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].doi`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Quartile"
+                      stepsReference={`internationalConferenceDetailsSchema[${index}].quartile`}
+                      type="text"
+                    />
+                    <FormField
                       label="ISSN"
                       stepsReference={`internationalConferenceDetailsSchema[${index}].issn`}
                       type="text"
                     />
 
-
-
                     {/* Author List Section */}
                     <div className="col-span-2">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Authors</h3>
-                      {field.authors?.map((author : String, authorIndex: any) => (
-                        <div
-                          key={authorIndex}
-                          className="flex items-center space-x-4 mb-2"
-                        >
-                          <input
-                            type="text"
-                            placeholder={`Author ${authorIndex + 1}`}
-                            {...register(
-                              `internationalConferenceDetailsSchema.${index}.authors.${authorIndex}`
-                            )}
-                            className="flex-1 p-2 border rounded-md"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-
-                              removeAuthor(index, authorIndex, internationalConference, setInternationalConferenceState)
-                            }
-                            className="text-red-500 text-sm"
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Authors
+                      </h3>
+                      {field.authors?.map(
+                        (author: String, authorIndex: any) => (
+                          <div
+                            key={authorIndex}
+                            className="flex items-center space-x-4 mb-2"
                           >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
+                            <input
+                              type="text"
+                              placeholder={`Author ${authorIndex + 1}`}
+                              {...register(
+                                `internationalConferenceDetailsSchema.${index}.authors.${authorIndex}`
+                              )}
+                              className="flex-1 p-2 border rounded-md"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeAuthor(
+                                  index,
+                                  authorIndex,
+                                  internationalConference,
+                                  setInternationalConferenceState
+                                )
+                              }
+                              className="text-red-500 text-sm"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )
+                      )}
                       <button
                         type="button"
                         onClick={() =>
-                          appendAuthor(index, internationalConference, setInternationalConferenceState)
-                             
+                          appendAuthor(
+                            index,
+                            internationalConference,
+                            setInternationalConferenceState
+                          )
                         }
                         className="text-blue-500 text-sm"
                       >
@@ -1001,7 +1051,6 @@ useEffect(() => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
               >
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   Research Projects
@@ -1067,7 +1116,6 @@ useEffect(() => {
                         </p>
                       )}
                     </div>
-                    
 
                     <div className="col-span-2 flex justify-end">
                       <button
@@ -1108,7 +1156,7 @@ useEffect(() => {
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2"
                   >
                     <FormField
-                      label="Faculty Name"
+                      label="Title"
                       stepsReference={`consultancySchema[${index}].faculty_name`}
                       type="text"
                     />
@@ -1159,7 +1207,6 @@ useEffect(() => {
                       )}
                     </div>
 
-
                     <div className="col-span-2 flex justify-end">
                       <button
                         type="button"
@@ -1175,13 +1222,13 @@ useEffect(() => {
                   type="button"
                   onClick={() =>
                     appendConsultancy({
-                    faculty_name: "",
-                    sanctionedDate: new Date(),
-                    projectPeriod: "",
-                    amount:"",
-                    principalInvestigator: "",
-                    coPrincipalInvestigator: "",
-                    status: "Ongoing",
+                      faculty_name: "",
+                      sanctionedDate: new Date(),
+                      projectPeriod: "",
+                      amount: "",
+                      principalInvestigator: "",
+                      coPrincipalInvestigator: "",
+                      status: "Ongoing",
                     })
                   }
                   className="text-blue-500 text-sm"
@@ -1197,7 +1244,6 @@ useEffect(() => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
               >
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   Patents
@@ -1225,31 +1271,40 @@ useEffect(() => {
                     />
 
                     <div className="col-span-2">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Authors</h3>
-                      {field.authors?.map((author : String, authorIndex: any) => (
-                        <div
-                          key={authorIndex}
-                          className="flex items-center space-x-4 mb-2"
-                        >
-                          <input
-                            type="text"
-                            placeholder={`Author ${authorIndex + 1}`}
-                            {...register(
-                              `patentsSchema.${index}.authors.${authorIndex}`
-                            )}
-                            className="flex-1 p-2 border rounded-md"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              removeAuthor(index, authorIndex, patents, setPatentsState)
-                            }
-                            className="text-red-500 text-sm"
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Authors
+                      </h3>
+                      {field.authors?.map(
+                        (author: String, authorIndex: any) => (
+                          <div
+                            key={authorIndex}
+                            className="flex items-center space-x-4 mb-2"
                           >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
+                            <input
+                              type="text"
+                              placeholder={`Author ${authorIndex + 1}`}
+                              {...register(
+                                `patentsSchema.${index}.authors.${authorIndex}`
+                              )}
+                              className="flex-1 p-2 border rounded-md"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeAuthor(
+                                  index,
+                                  authorIndex,
+                                  patents,
+                                  setPatentsState
+                                )
+                              }
+                              className="text-red-500 text-sm"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )
+                      )}
                       <button
                         type="button"
                         onClick={() =>
@@ -1283,7 +1338,6 @@ useEffect(() => {
                       )}
                     </div>
 
-
                     <div className="col-span-2 flex justify-end">
                       <button
                         type="button"
@@ -1301,10 +1355,10 @@ useEffect(() => {
                   onClick={() =>
                     appendPatents({
                       areaOfResearch: "",
-                      grantedYear : "",
-                      patentNo : "",
-                      patentStatus : "Pending",
-                      authors: [""]
+                      grantedYear: "",
+                      patentNo: "",
+                      patentStatus: "Pending",
+                      authors: [""],
                     })
                   }
                   className="text-blue-500 text-sm"
@@ -1439,19 +1493,17 @@ useEffect(() => {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
               >
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                 Book Publications
+                  Book Publications
                 </h2>
-
 
                 {publications.map((field, index) => (
                   <div
                     key={field.id}
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2"
                   >
-                   <div>
+                    <div>
                       <label
                         htmlFor={`publicationsSchema.${index}.publicationType`}
                         className="block text-sm font-medium text-gray-700"
@@ -1460,7 +1512,9 @@ useEffect(() => {
                       </label>
                       <select
                         id={`publicationsSchema.${index}.publicationType`}
-                        {...register(`publicationsSchema.${index}.publicationType`)}
+                        {...register(
+                          `publicationsSchema.${index}.publicationType`
+                        )}
                         className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
                       >
                         <option value="" disabled>
@@ -1474,7 +1528,10 @@ useEffect(() => {
                       </select>
                       {errors.publicationsSchema?.[index]?.publicationType && (
                         <p className="mt-2 text-sm text-red-600">
-                          {errors.publicationsSchema[index].publicationType.message}
+                          {
+                            errors.publicationsSchema[index].publicationType
+                              .message
+                          }
                         </p>
                       )}
                     </div>
@@ -1524,38 +1581,45 @@ useEffect(() => {
                       stepsReference={`publicationsSchema[${index}].yearOfPublish`}
                       type="number"
                     />
-                  <div className="col-span-2">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Authors</h3>
-                      {field.authors?.map((author : String, authorIndex: any) => (
-                        <div
-                          key={authorIndex}
-                          className="flex items-center space-x-4 mb-2"
-                        >
-                          <input
-                            type="text"
-                            placeholder={`Author ${authorIndex + 1}`}
-                            {...register(
-                              `publicationsSchema.${index}.authors.${authorIndex}`
-                            )}
-                            className="flex-1 p-2 border rounded-md"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-
-                              removeAuthor(index, authorIndex, publications, setPublication)
-                            }
-                            className="text-red-500 text-sm"
+                    <div className="col-span-2">
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Authors
+                      </h3>
+                      {field.authors?.map(
+                        (author: String, authorIndex: any) => (
+                          <div
+                            key={authorIndex}
+                            className="flex items-center space-x-4 mb-2"
                           >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
+                            <input
+                              type="text"
+                              placeholder={`Author ${authorIndex + 1}`}
+                              {...register(
+                                `publicationsSchema.${index}.authors.${authorIndex}`
+                              )}
+                              className="flex-1 p-2 border rounded-md"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeAuthor(
+                                  index,
+                                  authorIndex,
+                                  publications,
+                                  setPublication
+                                )
+                              }
+                              className="text-red-500 text-sm"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )
+                      )}
                       <button
                         type="button"
                         onClick={() =>
                           appendAuthor(index, publications, setPublication)
-                             
                         }
                         className="text-blue-500 text-sm"
                       >
@@ -1597,195 +1661,189 @@ useEffect(() => {
                 </button>
               </motion.div>
             )}
-                      {currentStep === 0 && (
-            <motion.div
-              initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
-
-            >
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                Events Attended
-              </h2>
-
-              {eventsAttended.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-                >
-                 
-
-                  <FormField
-                    label="Type of Event"
-                    stepsReference={`eventsAttendedSchema[${index}].typeOfEvent`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="Title"
-                    stepsReference={`eventsAttendedSchema[${index}].nameofevent`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="From Date"
-                    stepsReference={`eventsAttendedSchema[${index}].fromDate`}
-                    type="date"
-                  />
-
-                  <FormField
-                    label="To Date"
-                    stepsReference={`eventsAttendedSchema[${index}].toDate`}
-                    type="date"
-                  />
-
-                  <FormField
-                    label="Organizer"
-                    stepsReference={`eventsAttendedSchema[${index}].organizer`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="Venue of Event"
-                    stepsReference={`eventsAttendedSchema[${index}].venue`}
-                    type="text"
-                  />
-                  <FormField
-                    label="Sponsor"
-                    stepsReference={`eventsAttendedSchema[${index}].sponsor`}
-                    type="text"
-                  />
-                  <FormField
-                    label="Target Audience"
-                    stepsReference={`eventsAttendedSchema[${index}].targetAudience`}
-                    type="text"
-                  />
-                  <div className="col-span-2 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeEventsAttended(index)}
-                      className="text-red-500 text-sm"
-                    >
-                      Remove Button
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              <button
-                type="button"
-                onClick={() =>
-                  appendEventsAttended({
-
-                    typeOfEvent: "",
-                    nameofevent: "",
-                    fromDate: new Date(),
-                    toDate: new Date(),
-                    organizer: "",
-                    venue: "",
-                    sponsor: "",
-                    targetAudience: "",
-                  })
-                }
-                className="text-blue-500 text-sm"
+            {currentStep === 0 && (
+              <motion.div
+                initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
               >
-                + Add Events Attended
-              </button>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  Events Attended
+                </h2>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                Events Organized
-              </h2>
-
-              {eventsOrganized.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-                >
-
-                  <FormField
-                    label="Type of Event"
-                    stepsReference={`eventsOrganizedSchema[${index}].typeOfEvent`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="Title"
-                    stepsReference={`eventsOrganizedSchema[${index}].nameofevent`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="From Date"
-                    stepsReference={`eventsOrganizedSchema[${index}].fromDate`}
-                    type="date"
-                  />
-
-                  <FormField
-                    label="To Date"
-                    stepsReference={`eventsOrganizedSchema[${index}].toDate`}
-                    type="date"
-                  />
-
-                  <FormField
-                    label="Sponsor"
-                    stepsReference={`eventsOrganizedSchema[${index}].sponsor`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="Venue of Event"
-                    stepsReference={`eventsOrganizedSchema[${index}].venue`}
-                    type="text"
-                  />
-
-                  <FormField
-                    label="Target Audience"
-                    stepsReference={`eventsOrganizedSchema[${index}].targetAudience`}
-                    type="text"
-                  />
-                  <FormField
-                    label="Organizer"
-                    stepsReference={`eventsOrganizedSchema[${index}].organizer`}
-                    type="text"
+                {eventsAttended.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                  >
+                    <FormField
+                      label="Type of Event"
+                      stepsReference={`eventsAttendedSchema[${index}].typeOfEvent`}
+                      type="text"
                     />
-                  <FormField
-                    label="Target Audience"
-                    stepsReference={`eventsOrganizedSchema[${index}].targetAudience`}
-                    type="text"
-                  />
-                  <div className="col-span-2 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeEventsOrganized(index)}
-                      className="text-red-500 text-sm"
-                    >
-                      Remove Button
-                    </button>
+
+                    <FormField
+                      label="Title"
+                      stepsReference={`eventsAttendedSchema[${index}].nameofevent`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="From Date"
+                      stepsReference={`eventsAttendedSchema[${index}].fromDate`}
+                      type="date"
+                    />
+
+                    <FormField
+                      label="To Date"
+                      stepsReference={`eventsAttendedSchema[${index}].toDate`}
+                      type="date"
+                    />
+
+                    <FormField
+                      label="Organizer"
+                      stepsReference={`eventsAttendedSchema[${index}].organizer`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="Venue of Event"
+                      stepsReference={`eventsAttendedSchema[${index}].venue`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Sponsor"
+                      stepsReference={`eventsAttendedSchema[${index}].sponsor`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Target Audience"
+                      stepsReference={`eventsAttendedSchema[${index}].targetAudience`}
+                      type="text"
+                    />
+                    <div className="col-span-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeEventsAttended(index)}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove Button
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              <button
-                type="button"
-                onClick={() =>
-                  appendEventsOrganized({
+                <button
+                  type="button"
+                  onClick={() =>
+                    appendEventsAttended({
+                      typeOfEvent: "",
+                      nameofevent: "",
+                      fromDate: new Date(),
+                      toDate: new Date(),
+                      organizer: "",
+                      venue: "",
+                      sponsor: "",
+                      targetAudience: "",
+                    })
+                  }
+                  className="text-blue-500 text-sm"
+                >
+                  + Add Events Attended
+                </button>
 
-                    typeOfEvent: "",
-                    nameofevent: "",
-                    fromDate: new Date(),
-                    toDate: new Date(),
-                    organizer: "",
-                    venue: "",
-                    sponsor: "",
-                    targetAudience: "",
-                  })
-                }
-                className="text-blue-500 text-sm"
-              >
-                + Add Events Organized
-              </button>
-             {/* Invited Talks
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  Events Organized
+                </h2>
+
+                {eventsOrganized.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                  >
+                    <FormField
+                      label="Type of Event"
+                      stepsReference={`eventsOrganizedSchema[${index}].typeOfEvent`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="Title"
+                      stepsReference={`eventsOrganizedSchema[${index}].nameofevent`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="From Date"
+                      stepsReference={`eventsOrganizedSchema[${index}].fromDate`}
+                      type="date"
+                    />
+
+                    <FormField
+                      label="To Date"
+                      stepsReference={`eventsOrganizedSchema[${index}].toDate`}
+                      type="date"
+                    />
+
+                    <FormField
+                      label="Sponsor"
+                      stepsReference={`eventsOrganizedSchema[${index}].sponsor`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="Venue of Event"
+                      stepsReference={`eventsOrganizedSchema[${index}].venue`}
+                      type="text"
+                    />
+
+                    <FormField
+                      label="Target Audience"
+                      stepsReference={`eventsOrganizedSchema[${index}].targetAudience`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Organizer"
+                      stepsReference={`eventsOrganizedSchema[${index}].organizer`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Target Audience"
+                      stepsReference={`eventsOrganizedSchema[${index}].targetAudience`}
+                      type="text"
+                    />
+                    <div className="col-span-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeEventsOrganized(index)}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove Button
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    appendEventsOrganized({
+                      typeOfEvent: "",
+                      nameofevent: "",
+                      fromDate: new Date(),
+                      toDate: new Date(),
+                      organizer: "",
+                      venue: "",
+                      sponsor: "",
+                      targetAudience: "",
+                    })
+                  }
+                  className="text-blue-500 text-sm"
+                >
+                  + Add Events Organized
+                </button>
+                {/* Invited Talks
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                 Invited Talks
               </h2>
@@ -1868,29 +1926,29 @@ useEffect(() => {
               >
                 + Add Invited Talks
               </button> */}
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                Professional Memberships and Activities
-              </h2>
-              {professionalMembership.map((field : any, index :any) => (
-                <div
-                  key={field.id}
-                  className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-                >
-                  <FormField
-                    label="Professional Body"
-                    stepsReference={`professionalMembershipSchema[${index}].professionalBody`}
-                    type="text"
-                  />
-                  <FormField
-                    label="Membership ID"
-                    stepsReference={`professionalMembershipSchema[${index}].membershipId`}
-                    type="text"
-                  />
-                  <FormField
-                    label="Membership Since"
-                    stepsReference={`professionalMembershipSchema[${index}].membershipSince`}
-                    type="date"
-                  />
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  Professional Memberships and Activities
+                </h2>
+                {professionalMembership.map((field: any, index: any) => (
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                  >
+                    <FormField
+                      label="Professional Body"
+                      stepsReference={`professionalMembershipSchema[${index}].professionalBody`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Membership ID"
+                      stepsReference={`professionalMembershipSchema[${index}].membershipId`}
+                      type="text"
+                    />
+                    <FormField
+                      label="Membership Since"
+                      stepsReference={`professionalMembershipSchema[${index}].membershipSince`}
+                      type="date"
+                    />
                     <div>
                       <label
                         htmlFor={`professionalMembershipSchema.${index}.membershipType`}
@@ -1900,7 +1958,9 @@ useEffect(() => {
                       </label>
                       <select
                         id={`professionalMembershipSchema.${index}.membershipType`}
-                        {...register(`professionalMembershipSchema.${index}.membershipType`)}
+                        {...register(
+                          `professionalMembershipSchema.${index}.membershipType`
+                        )}
                         className="mt-1 block w-full p-2 border rounded-md bg-gray-50"
                       >
                         <option value="" disabled>
@@ -1909,196 +1969,387 @@ useEffect(() => {
                         <option value="Annual">Annual</option>
                         <option value="Permanent">Permanent</option>
                       </select>
-                      {errors.professionalMembershipSchema?.[index]?.membershipType && (
+                      {errors.professionalMembershipSchema?.[index]
+                        ?.membershipType && (
                         <p className="mt-2 text-sm text-red-600">
-                          {errors.professionalMembershipSchema[index].membershipType.message}
+                          {
+                            errors.professionalMembershipSchema[index]
+                              .membershipType.message
+                          }
                         </p>
                       )}
                     </div>
 
-                  <div className="col-span-2 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeProfessionalMembership(index)}
-                      className="text-red-500 text-sm"
-                    >
-                      Remove Button
-                    </button>
+                    <div className="col-span-2 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeProfessionalMembership(index)}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove Button
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() =>
-                  appendProfessionalMembership({
-
-                    professionalBody: "",
-                    membershipId: "",
-                    membershipSince: new Date(),
-                    membershipType: "",
-                  })
-                }
-                className="text-blue-500 text-sm"
+                ))}
+                <button
+                  type="button"
+                  onClick={() =>
+                    appendProfessionalMembership({
+                      professionalBody: "",
+                      membershipId: "",
+                      membershipSince: new Date(),
+                      membershipType: "",
+                    })
+                  }
+                  className="text-blue-500 text-sm"
+                >
+                  + Add Professional Memberships
+                </button>
+              </motion.div>
+            )}
+            {currentStep === 0 && (
+              <motion.div
+                initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
               >
-                + Add Professional Memberships
-              </button>
-            </motion.div>
-          )}
-          {currentStep === 0 && 
-          (
-            <motion.div
-              initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="space-y-6  mb-[10px] border border-gray-300 rounded-md p-6 shadow-md"
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  Review and Submit
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Review the entered data below. If everything looks correct,
+                  click "Submit" to finalize.
+                </p>
 
-            >
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                Review and Submit
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Review the entered data below. If everything looks correct, click "Submit" to finalize.
-              </p>
-
-              <div className="space-y-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                {/* Faculty Research Details */}
-                <div className="pb-4 border-b border-gray-300">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">Faculty Research Details</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <p><strong>VTU Faculty ID:</strong> {watch("facultyResearchSchema.vtuFacultyId")}</p>
-                        <p><strong>ORC ID:</strong> {watch("facultyResearchSchema.orcId")}</p>
-                    <p><strong>Scopus ID:</strong> {watch("facultyResearchSchema.scopusId")}</p>
-                    <p><strong>Publons/Web of Science ID:</strong> {watch("facultyResearchSchema.publonsAndWebOfScienceId")}</p>
-                  </div>
-                </div>
-
-                {/* National Journal Details */}
-                <div className="pb-4 border-b border-gray-300">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">National Journal Details</h3>
-                  <div className="space-y-2">
-                    {watch("nationalJournalDetailsSchema")?.map((journal : any, index : any) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                        <p><strong>Title:</strong> {journal.titleOfResearchPaper}</p>
-                        <p><strong>Journal:</strong> {journal.nameOfJournal}</p>
-                        <p><strong>Impact Factor:</strong> {journal.impactFactor}</p>
-                        <p><strong>Volume:</strong> {journal.volume}, <strong>Issue:</strong> {journal.issueNo}</p>
-                        <p><strong>Year:</strong> {journal.yearOfPublication}, <strong>Pages:</strong> {journal.pageNoFrom} - {journal.pageNoTo}</p>
-                        <p><strong>Authors:</strong> {journal.author01}, {journal.author02}, {journal.author03}, {journal.author04}</p>
-                        <p><strong>Published Under:</strong> {journal.publishedUnder}</p>
-                        <p><strong>Impact Factor:</strong> {journal.impactFactor}</p>
-
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* International Journal Details */}
-                <div className="pb-4 border-b border-gray-300">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">International Journal Details</h3>
-                  <div className="space-y-2">
-                    {watch("internationalJournalDetailsSchema")?.map((journal : any , index : any) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                        <p><strong>Title:</strong> {journal.titleOfResearchPaper}</p>
-                        <p><strong>Journal:</strong> {journal.nameOfJournal}</p>
-                        <p><strong>Impact Factor:</strong> {journal.impactFactor}</p>
-                        <p><strong>Volume:</strong> {journal.volume}, <strong>Issue:</strong> {journal.issueNo}</p>
-                        <p><strong>Year:</strong> {journal.yearOfPublication}, <strong>Pages:</strong> {journal.pageNoFrom} - {journal.pageNoTo}</p>
-                        <p><strong>Authors:</strong> {journal.author01}, {journal.author02}, {journal.author03}, {journal.author04}</p>
-                        <p><strong>Published Under:</strong> {journal.publishedUnder}</p>
-                        
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* National and International Conferences */}
-                <div className="pb-4 border-b border-gray-300">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">National and International Conferences</h3>
-                  {["nationalConferenceDetailsSchema", "internationalConferenceDetailsSchema"].map((conferenceType, typeIndex) => (
-                    <div key={typeIndex}>
-                      <h4 className="text-md font-semibold text-gray-600 mt-2">
-                        {conferenceType === "nationalConferenceDetailsSchema" ? "National Conferences" : "International Conferences"}
-                      </h4>
-                      <div className="space-y-2">
-                        {Array.isArray(watch(conferenceType as keyof Inputs)) && (watch(conferenceType as keyof Inputs) as any[])?.map((conference : any, index : any) => (
-                          <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                            <p><strong>Title:</strong> {conference.titleOfResearchPaper}</p>
-                            <p><strong>Journal:</strong> {conference.nameOfJournal}</p>
-                            <p><strong>Year:</strong> {conference.yearOfPublication}</p>
-                            <p><strong>Impact Factor:</strong> {conference.impactFactor}</p>
-                            <p><strong>Volume:</strong> {conference.volume}, <strong>Issue:</strong> {conference.issueNo}</p>
-                            <p><strong>Pages:</strong> {conference.pageNoFrom} - {conference.pageNoTo}</p>
-                            <p><strong>Authors:</strong> {conference.author01}, {conference.author02}, {conference.author03}, {conference.author04}</p>
-                            <p><strong>Published Under:</strong> {conference.publishedUnder}</p>
-                          
-                          </div>
-                        ))}
-                      </div>
+                <div className="space-y-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                  {/* Faculty Research Details */}
+                  <div className="pb-4 border-b border-gray-300">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      Faculty Research Details
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <p>
+                        <strong>VTU Faculty ID:</strong>{" "}
+                        {watch("facultyResearchSchema.vtuFacultyId")}
+                      </p>
+                      <p>
+                        <strong>ORC ID:</strong>{" "}
+                        {watch("facultyResearchSchema.orcId")}
+                      </p>
+                      <p>
+                        <strong>Scopus ID:</strong>{" "}
+                        {watch("facultyResearchSchema.scopusId")}
+                      </p>
+                      <p>
+                        <strong>Publons/Web of Science ID:</strong>{" "}
+                        {watch(
+                          "facultyResearchSchema.publonsAndWebOfScienceId"
+                        )}
+                      </p>
                     </div>
-                  ))}
-                </div>
-
-                {/* Research Grants */}
-                <div className="pb-4 border-b border-gray-300">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">Research Grants</h3>
-                  <div className="space-y-2">
-                    {watch("researchGrantsSchema")?.map((grant : any, index : any) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                        <p><strong>Title:</strong> {grant.titleOfProject}</p>
-                        <p><strong>Funded By:</strong> {grant.fundedBy}</p>
-                        <p><strong>Amount:</strong> {grant.sanctionedAmount}</p>
-                        <p><strong>Status:</strong> {grant.status}</p>
-                        <p><strong>Time Period:</strong> {grant.timePeriodOfProject}</p>
-                        <p>
-                          <strong>Sanctioned Date:</strong>{" "}
-                          {new Date(grant.sanctionedDate).toDateString()}
-                        </p>
-                        <p><strong>Principal Investigator:</strong> {grant.principalInvestigatorDesignation}, {grant.principalInvestigatorInstitute}</p>
-                        <p><strong>Co-Principal Investigator:</strong> {grant.coPrincipalInvestigatorDesignation}, {grant.coPrincipalInvestigatorInstitute}</p>
-                        <p><strong>PhD Awarded:</strong> {grant.anyPhdAwarded}</p>
-
-                      </div>
-                    ))}
                   </div>
-                </div>
 
-                {/* Patents */}
-                <div className="pb-4 border-b border-gray-300">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">Patents</h3>
-                  <div className="space-y-2">
-                    {watch("patentsSchema")?.map((patent : any, index : any) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                        <p><strong>Title:</strong> {patent.titleOfResearchPatent}</p>
-                        <p><strong>Area:</strong> {patent.areaOfResearch}</p>
-                        <p><strong>Year:</strong> {patent.patentGrantedYear}</p>
-                        <p><strong>Period:</strong> {patent.patentPeriod}</p>
-                        <p><strong>Authors:</strong> {patent.author1}, {patent.author2}, {patent.author3}, {patent.author4}</p>
-
-                      </div>
-                    ))}
-                  </div>
-                  {/* Consultancy */}
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-700 mb-3">Consultancy</h3>
+                  {/* National Journal Details */}
+                  <div className="pb-4 border-b border-gray-300">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      National Journal Details
+                    </h3>
                     <div className="space-y-2">
-                      {watch("consultancySchema")?.map((consultancy : any, index : any) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                          <p><strong>Amount:</strong> {consultancy.sanctionedAmount}</p>
-                          <p><strong>Funded By:</strong> {consultancy.fundedBy}</p>
-                          <p><strong>Status:</strong> {consultancy.status}</p>
-                          <p><strong>Time Period:</strong> {consultancy.timePeriodOfProject}</p>
-                          <p>
-                            <strong>Sanctioned Date:</strong>{" "}
-                            {new Date(consultancy.sanctionedDate).toDateString()}
-                          </p>
-                          <p><strong>Principal Investigator:</strong> {consultancy.principalInvestigatorDesignation}, {consultancy.principalInvestigatorInstitute}</p>
-                          <p><strong>Co-Principal Investigator:</strong> {consultancy.coPrincipalInvestigatorDesignation}, {consultancy.coPrincipalInvestigatorInstitute}</p>
-
-                        </div>
-                      ))}
+                      {watch("nationalJournalDetailsSchema")?.map(
+                        (journal: any, index: any) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                          >
+                            <p>
+                              <strong>Title:</strong>{" "}
+                              {journal.titleOfResearchPaper}
+                            </p>
+                            <p>
+                              <strong>Journal:</strong> {journal.nameOfJournal}
+                            </p>
+                            <p>
+                              <strong>Impact Factor:</strong>{" "}
+                              {journal.impactFactor}
+                            </p>
+                            <p>
+                              <strong>Volume:</strong> {journal.volume},{" "}
+                              <strong>Issue:</strong> {journal.issueNo}
+                            </p>
+                            <p>
+                              <strong>Year:</strong> {journal.yearOfPublication}
+                              , <strong>Pages:</strong> {journal.pageNoFrom} -{" "}
+                              {journal.pageNoTo}
+                            </p>
+                            <p>
+                              <strong>Authors:</strong> {journal.author01},{" "}
+                              {journal.author02}, {journal.author03},{" "}
+                              {journal.author04}
+                            </p>
+                            <p>
+                              <strong>Published Under:</strong>{" "}
+                              {journal.publishedUnder}
+                            </p>
+                            <p>
+                              <strong>Impact Factor:</strong>{" "}
+                              {journal.impactFactor}
+                            </p>
+                          </div>
+                        )
+                      )}
                     </div>
-                    {/* Research Scholar */}
-                    {/* <div>
+                  </div>
+
+                  {/* International Journal Details */}
+                  <div className="pb-4 border-b border-gray-300">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      International Journal Details
+                    </h3>
+                    <div className="space-y-2">
+                      {watch("internationalJournalDetailsSchema")?.map(
+                        (journal: any, index: any) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                          >
+                            <p>
+                              <strong>Title:</strong>{" "}
+                              {journal.titleOfResearchPaper}
+                            </p>
+                            <p>
+                              <strong>Journal:</strong> {journal.nameOfJournal}
+                            </p>
+                            <p>
+                              <strong>Impact Factor:</strong>{" "}
+                              {journal.impactFactor}
+                            </p>
+                            <p>
+                              <strong>Volume:</strong> {journal.volume},{" "}
+                              <strong>Issue:</strong> {journal.issueNo}
+                            </p>
+                            <p>
+                              <strong>Year:</strong> {journal.yearOfPublication}
+                              , <strong>Pages:</strong> {journal.pageNoFrom} -{" "}
+                              {journal.pageNoTo}
+                            </p>
+                            <p>
+                              <strong>Authors:</strong> {journal.author01},{" "}
+                              {journal.author02}, {journal.author03},{" "}
+                              {journal.author04}
+                            </p>
+                            <p>
+                              <strong>Published Under:</strong>{" "}
+                              {journal.publishedUnder}
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  {/* National and International Conferences */}
+                  <div className="pb-4 border-b border-gray-300">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      National and International Conferences
+                    </h3>
+                    {[
+                      "nationalConferenceDetailsSchema",
+                      "internationalConferenceDetailsSchema",
+                    ].map((conferenceType, typeIndex) => (
+                      <div key={typeIndex}>
+                        <h4 className="text-md font-semibold text-gray-600 mt-2">
+                          {conferenceType === "nationalConferenceDetailsSchema"
+                            ? "National Conferences"
+                            : "International Conferences"}
+                        </h4>
+                        <div className="space-y-2">
+                          {Array.isArray(
+                            watch(conferenceType as keyof Inputs)
+                          ) &&
+                            (
+                              watch(conferenceType as keyof Inputs) as any[]
+                            )?.map((conference: any, index: any) => (
+                              <div
+                                key={index}
+                                className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                              >
+                                <p>
+                                  <strong>Title:</strong>{" "}
+                                  {conference.titleOfResearchPaper}
+                                </p>
+                                <p>
+                                  <strong>Journal:</strong>{" "}
+                                  {conference.nameOfJournal}
+                                </p>
+                                <p>
+                                  <strong>Year:</strong>{" "}
+                                  {conference.yearOfPublication}
+                                </p>
+                                <p>
+                                  <strong>Impact Factor:</strong>{" "}
+                                  {conference.impactFactor}
+                                </p>
+                                <p>
+                                  <strong>Volume:</strong> {conference.volume},{" "}
+                                  <strong>Issue:</strong> {conference.issueNo}
+                                </p>
+                                <p>
+                                  <strong>Pages:</strong>{" "}
+                                  {conference.pageNoFrom} -{" "}
+                                  {conference.pageNoTo}
+                                </p>
+                                <p>
+                                  <strong>Authors:</strong>{" "}
+                                  {conference.author01}, {conference.author02},{" "}
+                                  {conference.author03}, {conference.author04}
+                                </p>
+                                <p>
+                                  <strong>Published Under:</strong>{" "}
+                                  {conference.publishedUnder}
+                                </p>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Research Grants */}
+                  <div className="pb-4 border-b border-gray-300">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      Research Grants
+                    </h3>
+                    <div className="space-y-2">
+                      {watch("researchGrantsSchema")?.map(
+                        (grant: any, index: any) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                          >
+                            <p>
+                              <strong>Title:</strong> {grant.titleOfProject}
+                            </p>
+                            <p>
+                              <strong>Funded By:</strong> {grant.fundedBy}
+                            </p>
+                            <p>
+                              <strong>Amount:</strong> {grant.sanctionedAmount}
+                            </p>
+                            <p>
+                              <strong>Status:</strong> {grant.status}
+                            </p>
+                            <p>
+                              <strong>Time Period:</strong>{" "}
+                              {grant.timePeriodOfProject}
+                            </p>
+                            <p>
+                              <strong>Sanctioned Date:</strong>{" "}
+                              {new Date(grant.sanctionedDate).toDateString()}
+                            </p>
+                            <p>
+                              <strong>Principal Investigator:</strong>{" "}
+                              {grant.principalInvestigatorDesignation},{" "}
+                              {grant.principalInvestigatorInstitute}
+                            </p>
+                            <p>
+                              <strong>Co-Principal Investigator:</strong>{" "}
+                              {grant.coPrincipalInvestigatorDesignation},{" "}
+                              {grant.coPrincipalInvestigatorInstitute}
+                            </p>
+                            <p>
+                              <strong>PhD Awarded:</strong>{" "}
+                              {grant.anyPhdAwarded}
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Patents */}
+                  <div className="pb-4 border-b border-gray-300">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      Patents
+                    </h3>
+                    <div className="space-y-2">
+                      {watch("patentsSchema")?.map(
+                        (patent: any, index: any) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                          >
+                            <p>
+                              <strong>Title:</strong>{" "}
+                              {patent.titleOfResearchPatent}
+                            </p>
+                            <p>
+                              <strong>Area:</strong> {patent.areaOfResearch}
+                            </p>
+                            <p>
+                              <strong>Year:</strong> {patent.patentGrantedYear}
+                            </p>
+                            <p>
+                              <strong>Period:</strong> {patent.patentPeriod}
+                            </p>
+                            <p>
+                              <strong>Authors:</strong> {patent.author1},{" "}
+                              {patent.author2}, {patent.author3},{" "}
+                              {patent.author4}
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                    {/* Consultancy */}
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-700 mb-3">
+                        Consultancy
+                      </h3>
+                      <div className="space-y-2">
+                        {watch("consultancySchema")?.map(
+                          (consultancy: any, index: any) => (
+                            <div
+                              key={index}
+                              className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                            >
+                              <p>
+                                <strong>Amount:</strong>{" "}
+                                {consultancy.sanctionedAmount}
+                              </p>
+                              <p>
+                                <strong>Funded By:</strong>{" "}
+                                {consultancy.fundedBy}
+                              </p>
+                              <p>
+                                <strong>Status:</strong> {consultancy.status}
+                              </p>
+                              <p>
+                                <strong>Time Period:</strong>{" "}
+                                {consultancy.timePeriodOfProject}
+                              </p>
+                              <p>
+                                <strong>Sanctioned Date:</strong>{" "}
+                                {new Date(
+                                  consultancy.sanctionedDate
+                                ).toDateString()}
+                              </p>
+                              <p>
+                                <strong>Principal Investigator:</strong>{" "}
+                                {consultancy.principalInvestigatorDesignation},{" "}
+                                {consultancy.principalInvestigatorInstitute}
+                              </p>
+                              <p>
+                                <strong>Co-Principal Investigator:</strong>{" "}
+                                {consultancy.coPrincipalInvestigatorDesignation}
+                                , {consultancy.coPrincipalInvestigatorInstitute}
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </div>
+                      {/* Research Scholar */}
+                      {/* <div>
                        <h3 className="text-lg font-bold text-gray-700 mb-3">Research Scholar</h3>
                        <div className="space-y-2">
                          {watch("researchScholarDetailsSchema")?.map((scholar : any, index : any) => (
@@ -2118,54 +2369,82 @@ useEffect(() => {
                          ))}
                          </div>
                     </div> */}
+                    </div>
+                  </div>
+
+                  {/* Publications */}
+                  <div className="pb-4">
+                    <h3 className="text-lg font-bold text-gray-700 mb-3">
+                      Publications
+                    </h3>
+                    <div className="space-y-2">
+                      {watch("publicationsSchema")?.map(
+                        (publication: any, index: any) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300"
+                          >
+                            <p>
+                              <strong>Name of Journal:</strong>{" "}
+                              {publication.nameOfJournal}
+                            </p>
+                            <p>
+                              <strong>DOI:</strong> {publication.doi}
+                            </p>
+                            <p>
+                              <strong>Impact Factor:</strong>{" "}
+                              {publication.impactFactor}
+                            </p>
+                            <p>
+                              <strong>Volume and Page:</strong>{" "}
+                              {publication.volumeAndPage}
+                            </p>
+                            <p>
+                              <strong>N/IN:</strong> {publication.n_In}
+                            </p>
+                            <p>
+                              <strong>Type:</strong>{" "}
+                              {publication.typeOfPublication}
+                            </p>
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
                 </div>
-
-                {/* Publications */}
-                <div className="pb-4">
-                  <h3 className="text-lg font-bold text-gray-700 mb-3">Publications</h3>
-                  <div className="space-y-2">
-                    {watch("publicationsSchema")?.map((publication : any, index : any) => (
-                      <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
-                        <p><strong>Name of Journal:</strong> {publication.nameOfJournal}</p>
-                        <p><strong>DOI:</strong> {publication.doi}</p>
-                        <p><strong>Impact Factor:</strong> {publication.impactFactor}</p>
-                        <p><strong>Volume and Page:</strong> {publication.volumeAndPage}</p>
-                        <p><strong>N/IN:</strong> {publication.n_In}</p>
-                        <p><strong>Type:</strong> {publication.typeOfPublication}</p>
-
-                      </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Events Attended
+                  </h3>
+                  <ul className="list-disc pl-5">
+                    {watch("eventsAttendedSchema")?.map((event, index) => (
+                      <li key={index}>
+                        <strong>Title:</strong> {event.nameofevent},
+                        <strong> Organizer:</strong> {event.organizer},
+                        <strong> Dates:</strong>{" "}
+                        {new Date(event.fromDate).toLocaleDateString()} -{" "}
+                        {new Date(event.toDate).toLocaleDateString()}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800">Events Attended</h3>
-                <ul className="list-disc pl-5">
-                  {watch("eventsAttendedSchema")?.map((event, index) => (
-                    <li key={index}>
-                      <strong>Title:</strong> {event.nameofevent}, 
-                      <strong> Organizer:</strong> {event.organizer}, 
-                      <strong> Dates:</strong> {new Date(event.fromDate).toLocaleDateString()} -{" "}
-                      {new Date(event.toDate).toLocaleDateString()}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800">Events Organized</h3>
-                <ul className="list-disc pl-5">
-                  {watch("eventsOrganizedSchema")?.map((event, index) => (
-                    <li key={index}>
-                      <strong>Title:</strong> {event.nameofevent}, 
-                      <strong> Sponsor:</strong> {event.sponsor}, 
-                      <strong> Dates:</strong> {new Date(event.fromDate).toLocaleDateString()} -{" "}
-                      {new Date(event.toDate).toLocaleDateString()}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {/* <div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Events Organized
+                  </h3>
+                  <ul className="list-disc pl-5">
+                    {watch("eventsOrganizedSchema")?.map((event, index) => (
+                      <li key={index}>
+                        <strong>Title:</strong> {event.nameofevent},
+                        <strong> Sponsor:</strong> {event.sponsor},
+                        <strong> Dates:</strong>{" "}
+                        {new Date(event.fromDate).toLocaleDateString()} -{" "}
+                        {new Date(event.toDate).toLocaleDateString()}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* <div>
                 <h3 className="text-xl font-semibold text-gray-800">Invited Talks</h3>
                 <ul className="list-disc pl-5">
                   {watch("invitedTalksSchema")?.map((talk, index) => (
@@ -2178,49 +2457,56 @@ useEffect(() => {
                   ))}
                 </ul>
               </div> */}
-              {/* Submit Button */}
-              <div className="mt-6 flex justify-end">
-                <button
-                  type="button"
-                  onClick={handleSubmit(async (data) => {
-                    try {
-                      const payload= {
-                        facultyResearchSchema: data.facultyResearchSchema,
-                        nationalJournalDetailsSchema: data.nationalJournalDetailsSchema,
-                        internationalJournalDetailsSchema: data.internationalJournalDetailsSchema,
-                        nationalConferenceDetailsSchema: data.nationalConferenceDetailsSchema,
-                        internationalConferenceDetailsSchema: data.internationalConferenceDetailsSchema,
-                        researchGrantsSchema: data.researchGrantsSchema,
-                        patentsSchema: data.patentsSchema,
-                        consultancySchema: data.consultancySchema,
-                        professionalMembershipSchema: data.professionalMembershipSchema,
-                        eventsAttendedSchema: data.eventsAttendedSchema,
-                        eventsOrganizedSchema: data.eventsOrganizedSchema,
-                        publicationsSchema: data.publicationsSchema,
-                        facultyId:facultyId,
-                      };
-                      console.log("Payload being sent to API:", payload);
-                
-                      const response = await axios.post("/api/fac_reg_res", payload);
-                      if (response.status === 200) {
-                        console.log(response.data);
-                        alert("Form submitted successfully!");
-                        reset();
-                        setCurrentStep(0); // Restart the form
-                      }
-                    } catch (error) {
-                      console.error(error);
-                      alert("An error occurred while submitting the form.");
-                    }
-                  })}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-md shadow hover:bg-blue-700"
-                >
-                  Submit
-                </button>
-              </div>
-            </motion.div>
-          )}
+                {/* Submit Button */}
+                <div className="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleSubmit(async (data) => {
+                      try {
+                        const payload = {
+                          facultyResearchSchema: data.facultyResearchSchema,
+                          nationalJournalDetailsSchema:
+                            data.nationalJournalDetailsSchema,
+                          internationalJournalDetailsSchema:
+                            data.internationalJournalDetailsSchema,
+                          nationalConferenceDetailsSchema:
+                            data.nationalConferenceDetailsSchema,
+                          internationalConferenceDetailsSchema:
+                            data.internationalConferenceDetailsSchema,
+                          researchGrantsSchema: data.researchGrantsSchema,
+                          patentsSchema: data.patentsSchema,
+                          consultancySchema: data.consultancySchema,
+                          professionalMembershipSchema:
+                            data.professionalMembershipSchema,
+                          eventsAttendedSchema: data.eventsAttendedSchema,
+                          eventsOrganizedSchema: data.eventsOrganizedSchema,
+                          publicationsSchema: data.publicationsSchema,
+                          facultyId: facultyId,
+                        };
+                        console.log("Payload being sent to API:", payload);
 
+                        const response = await axios.post(
+                          "/api/fac_reg_res",
+                          payload
+                        );
+                        if (response.status === 200) {
+                          console.log(response.data);
+                          alert("Form submitted successfully!");
+                          reset();
+                          setCurrentStep(0); // Restart the form
+                        }
+                      } catch (error) {
+                        console.error(error);
+                        alert("An error occurred while submitting the form.");
+                      }
+                    })}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-md shadow hover:bg-blue-700"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </motion.div>
+            )}
           </form>
         </FormProvider>
 

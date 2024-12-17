@@ -55,10 +55,15 @@ const LoginPage = () => {
             router.push("/mis_accounts/accounts_home");
           } else if (data.role === "est") {
             router.push("/mis_est");
+          } else if (data.role === "principal" || data.role === "Principal") {
+            router.push("/mis_principal");
           }
         } else if (loginType === "Student") {
           router.push("/mis_student/student_home");
         }
+        else if (data.role === "principal") {
+            router.push("/mis_principal");
+          }
       } else {
         alert("Invalid credentials");
       }

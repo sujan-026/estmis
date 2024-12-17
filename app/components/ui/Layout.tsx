@@ -5,11 +5,12 @@ import HorizontalNavbarFaculty from '../ui/navigation_bar/deptfaculty_nav'; // F
 import HorizontalNavbarHoD from '../ui/navigation_bar/hod_nav'; // HoD Navbar
 import HorizontalNavbarStudent from '../ui/navigation_bar/student_nav'; // student Navbar
 import HorizontalNavbarAccounts from '../ui/navigation_bar/accounts_nav'; // HoD Navbar
+import HorizontalNavbar from "../ui/navigation_bar/principal_nav"; // HoD Navbar
 import { useUser } from '../../context/usercontext';
 
 interface LayoutProps {
   children: React.ReactNode;
-  moduleType: 'admission' | 'accounts' | 'faculty' | 'hod' | 'student'; // Add module type prop
+  moduleType: 'admission' | 'accounts' | 'faculty' | 'hod' | 'student' | 'principal'; // Add module type prop
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, moduleType }) => {
@@ -34,6 +35,9 @@ const Layout: React.FC<LayoutProps> = ({ children, moduleType }) => {
     }
     if (moduleType === 'hod') {
       return <HorizontalNavbarHoD />;
+    }
+    if (moduleType === 'principal') {
+      return <HorizontalNavbar />;
     }
     if (moduleType === 'student') {
       return <HorizontalNavbarStudent />;

@@ -134,7 +134,7 @@ export default function AdminUserManagement() {
           </button>
           <button
             className="px-4 py-2 rounded-lg bg-blue-500 text-white"
-            onClick={() => router.push("/admin")}
+            onClick={() => router.push("/mis_est")}
           >
             Back
           </button>

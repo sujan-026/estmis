@@ -22,11 +22,10 @@ export const personalSchema = z.object({
   //     message: "Correct format - first three letters followed by 2 digits",
   //   }), //first three letters then 2 digits
   qualification: z.string().min(1, { message: "Qualification is required" }),
-  //photo: z.string({ message: "Photo is required" }),
-  title: z.string().min(1, { message: "Qualification is required" }),
-  department:z.string().min(1, { message: "Department is required" }),
+  //photo: z.string({ message: "Photo is required" }).optional().or(z.literal("")),
+  department: z.string().min(1, { message: "Department is required" }),
   designation: z.string().min(1, { message: "Designation is required" }),
-  aided : z.string().min(1, { message: "Field is required" }),
+  aided: z.string().min(1, { message: "Field is required" }),
   prefix: z.enum(["Mr", "Mrs", "Ms", "Dr", "Prof"]),
   firstName: z
     .string()
@@ -47,7 +46,9 @@ export const personalSchema = z.object({
     .regex(/[0-9]{10}/, { message: "Phone number must be 10 digits" }),
   emergencyContactNo: z
     .string({ message: "Emergency contact number is required" })
-    .regex(/[0-9]{10}/, { message: "Phone number must be 10 digits" }).optional().or(z.literal("")),
+    .regex(/[0-9]{10}/, { message: "Phone number must be 10 digits" })
+    .optional()
+    .or(z.literal("")),
   aadhar: z
     .string({ message: "Aadhar number is required" })
     .regex(/[0-9]{12}/, { message: "Aadhar number must be 12 digits" }),
@@ -88,6 +89,11 @@ export const personalSchema = z.object({
   languagesToWrite: z.array(z.string(), {
     message: "Please select a language",
   }),
+  dateOfJoiningDrait: z
+    .string()
+    .min(1, { message: "Date of joining is required" })
+    .optional()
+    .or(z.literal("")),
 });
 
 export const financialSchema = z.object({
@@ -108,19 +114,23 @@ export const financialSchema = z.object({
     .string({ message: "PF number is required" })
     .regex(/[a-zA-Z0-9]{22}/, {
       message: "PF number must be in correct format",
-    }).optional()
+    })
+    .optional()
     .or(z.literal("")),
   uanNumber: z
     .string({ message: "UAN number is required" })
-    .regex(/[0-9]{12}/, { message: "UAN number must be in correct format" }).optional().or(z.literal(""))
+    .regex(/[0-9]{12}/, { message: "UAN number must be in correct format" })
+    .optional()
+    .or(z.literal(""))
     .or(z.literal("")),
   pensionNumber: z
     .string({ message: "Pension number is required" })
     .regex(/[0-9]{12}/, {
       message: "Pension number must be in correct format",
-    }).optional().or(z.literal(""))
+    })
+    .optional()
+    .or(z.literal(""))
     .or(z.literal("")),
-
 });
 
 export const educationSchema = z.array(
@@ -141,7 +151,7 @@ export const educationSchema = z.array(
     passClass: z.enum(["Distinction", "First", "Second", "Third", "Fail"], {
       message: "Please select a class",
     }),
-    PassingYear: z.string().min(1, { message: "Passing year is required" })
+    PassingYear: z.string().min(1, { message: "Passing year is required" }),
   })
 );
 
@@ -150,13 +160,7 @@ export const dependentsSchema = z.object({
   motherName: z.string().optional().or(z.literal("")),
   fatherName: z.string().optional().or(z.literal("")),
   spouseName: z.string().optional().or(z.literal("")),
-  children: z.array(
-    z.object({
-      name: z.string().min(1, { message: "Name is required" }).optional().or(z.literal("")),
-      gender: z.enum(["Male", "Female", "Prefer not to say"]).optional().or(z.literal("")),
-      dob: z.coerce.date({ message: "Date of birth is required" }).optional().or(z.literal("")),
-    })
-  ),
+  children: z.string().optional().or(z.literal("")),
 });
 
 export const facultyPersonalDetailsSchema = z.object({
