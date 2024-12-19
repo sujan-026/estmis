@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
       const query = `
       USE aittest;
-      SELECT t.id, t.employee_id, t.typeOfPublication, t.title, t.doi, t.issn, t.joConName,
+      SELECT t.id, t.employee_id,fp.faculty_name,  t.typeOfPublication, t.title, t.doi, t.issn, t.joConName,
              t.yearOfPublication, t.pageNo, t.authors, t.publishedUnder, t.impactFactor,
              t.quartile, t.sponsor, t.venue, t.volume, t.issueNo
       FROM dbo.ConferenceAndJournal AS t

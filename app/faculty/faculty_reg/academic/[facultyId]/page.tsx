@@ -920,9 +920,9 @@ export default function Form() {
                           alert("Form submitted successfully!");
                           reset();
                           setCurrentStep(0); // Restart the form
-                          router.push(
-                            `/faculty/faculty_reg/research/${facultyId}`
-                          );
+                          // router.push(
+                          //   `/faculty/faculty_reg/research/${facultyId}`
+                          // );
                         }
                       } catch (error) {
                         console.error(error);

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
       const query = `
       USE aittest;
-      SELECT t.id, t.publicationType, t.name, t.volume, t.pageNumber, t.issn, t.publisher, t.title,
+      SELECT t.id, t.publicationType,fp.faculty_name,  t.name, t.volume, t.pageNumber, t.issn, t.publisher, t.title,
              t.area, t.impactFactor, t.employee_id, t.yearOfPublish, t.authors
       FROM dbo.bookPublication AS t
       INNER JOIN dbo.facultyPersonalDetails AS fp

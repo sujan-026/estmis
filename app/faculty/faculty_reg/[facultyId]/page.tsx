@@ -238,26 +238,9 @@ export default function Form() {
         >
           Academic Details
         </a>
-        <a
-          className={`link hover:underline underline-offset-3 `}
-          href={`/faculty/faculty_reg/research/${facultyId}`}
-        >
-          Research Details
-        </a>
       </nav>
       <section className=" flex flex-col justify-between p-24">
-        <div className="mt-6 flex justify-end">
-          <button
-            type="button"
-            onClick={handleSubmit(async (data) => {
-              console.log("Submit handler invoked", data);
-              console.log("Faculty ID:", facultyId);
-            })}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-md shadow-sm hover:bg-indigo-700"
-          >
-            Submit
-          </button>
-        </div>
+
         <FormProvider register={register} errors={errors}>
           <form onSubmit={handleSubmit(processForm)} className="mt-12 py-12">
             {currentStep === 0 && (

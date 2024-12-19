@@ -1,44 +1,44 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Select from 'react-select';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import { motion } from "framer-motion";
 
 // Helper function to format dates
 const formatDate = (dateString: string) => {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Invalid Date';
-  return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1)
+  if (isNaN(date.getTime())) return "Invalid Date";
+  return `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1)
     .toString()
-    .padStart(2, '0')}-${date.getFullYear()}`;
+    .padStart(2, "0")}-${date.getFullYear()}`;
 };
 
 const ResearchTableDisplay = () => {
-  const [selectedTable, setSelectedTable] = useState('');
+  const [selectedTable, setSelectedTable] = useState("");
   const [tableData, setTableData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [branches, setBranches] = useState([]);
   const [selectedBranches, setSelectedBranches] = useState([]);
-  const [error, setError] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [error, setError] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   // Tables that require date filtering
   const tablesWithDateFilter = [
-    'fac_bookPublication',
-    'fac_conferenceAndJournal',
-    'fac_patent',
-    'fac_eventAttended',
-    'fac_eventOrganized',
-    'fac_consultancy',
+    "fac_bookPublication",
+    "fac_conferenceAndJournal",
+    "fac_patent",
+    "fac_eventAttended",
+    "fac_eventOrganized",
+    "fac_consultancy",
   ];
 
   // Fetch branches
   useEffect(() => {
     const fetchBranches = async () => {
       try {
-        const response = await fetch('/api/hod/branches');
+        const response = await fetch("/api/hod/branches");
         if (!response.ok) {
           throw new Error(`Error fetching branches: ${response.statusText}`);
         }
@@ -55,25 +55,29 @@ const ResearchTableDisplay = () => {
   // Fetch table data
   const fetchTableData = async (tableName: string) => {
     try {
-      const isAllBranches = selectedBranches.some((branch) => branch.value === 'ALL');
+      const isAllBranches = selectedBranches.some(
+        (branch) => branch.value === "ALL"
+      );
       const branchFilter = isAllBranches
-        ? '' // No branch filter needed for "All Branches"
-        : selectedBranches.map((branch) => branch.value).join(',');
+        ? "" // No branch filter needed for "All Branches"
+        : selectedBranches.map((branch) => branch.value).join(",");
 
-      const apiPrefix = isAllBranches ? '/api/principal' : '/api/hod';
+      const apiPrefix = isAllBranches ? "/api/principal" : "/api/hod";
       const endpoint = `${apiPrefix}/${tableName}${
-        branchFilter ? `?branches=${encodeURIComponent(branchFilter)}` : ''
+        branchFilter ? `?branches=${encodeURIComponent(branchFilter)}` : ""
       }`;
 
       const response = await fetch(endpoint);
       if (!response.ok) {
-        throw new Error(`Error fetching ${tableName} data: ${response.statusText}`);
+        throw new Error(
+          `Error fetching ${tableName} data: ${response.statusText}`
+        );
       }
 
       const result = await response.json();
       setTableData(result.data);
       setFilteredData(result.data); // Initialize filtered data
-      setError('');
+      setError("");
     } catch (err: any) {
       setError(err.message);
       setTableData([]);
@@ -117,140 +121,142 @@ const ResearchTableDisplay = () => {
   };
 
   const resetDateFilter = () => {
-    setStartDate('');
-    setEndDate('');
+    setStartDate("");
+    setEndDate("");
     setFilteredData(tableData); // Reset the filtered data to the full table data
   };
 
   const exportToCSV = () => {
     try {
       if (filteredData.length === 0) {
-        alert('No data available to export.');
+        alert("No data available to export.");
         return;
       }
 
       const headers = tableHeaders[selectedTable].map((header) => header.label);
       const rows = filteredData.map((row, idx) => {
-        const rowObj: any = { 'Sl. No': idx + 1 };
+        const rowObj: any = { "Sl. No": idx + 1 };
         tableHeaders[selectedTable].forEach((header) => {
           rowObj[header.label] =
             header.isDate && row[header.key]
               ? formatDate(row[header.key])
-              : row[header.key] || '-';
+              : row[header.key] || "-";
         });
         return rowObj;
       });
 
       const csvContent = [
-        headers.join(','),
+        headers.join(","),
         ...rows.map((row) =>
           Object.values(row)
             .map((value) => `"${value}"`)
-            .join(',')
+            .join(",")
         ),
-      ].join('\n');
+      ].join("\n");
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', `faculty_data_${selectedTable}.csv`);
+      link.setAttribute("download", `faculty_data_${selectedTable}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (err) {
-      console.error('Error exporting CSV:', err);
+      console.error("Error exporting CSV:", err);
     }
   };
 
   const branchOptions = [
-    { value: 'ALL', label: 'All Branches' },
+    { value: "ALL", label: "All Branches" },
     ...branches.map((branch) => ({
       value: branch.brcode,
       label: branch.brcode_title,
     })),
   ];
 
-  const tableHeaders: { [key: string]: { label: string; key: string; isDate?: boolean }[] } = {
+  const tableHeaders: {
+    [key: string]: { label: string; key: string; isDate?: boolean }[];
+  } = {
     fac_research: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'ORCID ID', key: 'orcidId' },
-      { label: 'Google Scholar ID', key: 'googleScholarId' },
-      { label: 'Scopus ID', key: 'scopusId' },
-      { label: 'Publons ID', key: 'publonsId' },
-      { label: 'Researcher ID', key: 'researchId' },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "ORCID ID", key: "orcidId" },
+      { label: "Google Scholar ID", key: "googleScholarId" },
+      { label: "Scopus ID", key: "scopusId" },
+      { label: "Publons ID", key: "publonsId" },
+      { label: "Researcher ID", key: "researchId" },
     ],
     fac_bookPublication: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Title', key: 'title' },
-      { label: 'Publication Type', key: 'publicationType' },
-      { label: 'ISSN', key: 'issn' },
-      { label: 'Publisher', key: 'publisher' },
-      { label: 'Impact Factor', key: 'impactFactor' },
-      { label: 'Year of Publish', key: 'yearOfPublish', isDate: true },
-      { label: 'Authors', key: 'authors' },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Title", key: "title" },
+      { label: "Publication Type", key: "publicationType" },
+      { label: "ISSN", key: "issn" },
+      { label: "Publisher", key: "publisher" },
+      { label: "Impact Factor", key: "impactFactor" },
+      { label: "Year of Publish", key: "yearOfPublish", isDate: true },
+      { label: "Authors", key: "authors" },
     ],
     fac_conferenceAndJournal: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Title', key: 'title' },
-      { label: 'Type of Publication', key: 'typeOfPublication' },
-      { label: 'DOI', key: 'doi' },
-      { label: 'ISSN', key: 'issn' },
-      { label: 'Year of Publication', key: 'yearOfPublication', isDate: true },
-      { label: 'Impact Factor', key: 'impactFactor' },
-      { label: 'Volume', key: 'volume' },
-      { label: 'Pages', key: 'pages' },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Title", key: "title" },
+      { label: "Type of Publication", key: "typeOfPublication" },
+      { label: "DOI", key: "doi" },
+      { label: "ISSN", key: "issn" },
+      { label: "Year of Publication", key: "yearOfPublication", isDate: true },
+      { label: "Impact Factor", key: "impactFactor" },
+      { label: "Volume", key: "volume" },
+      { label: "Pages", key: "pages" },
     ],
     fac_patent: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Granted Year', key: 'grantedYear', isDate: true },
-      { label: 'Patent Number', key: 'patentNo' },
-      { label: 'Patent Status', key: 'patentStatus' },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Granted Year", key: "grantedYear", isDate: true },
+      { label: "Patent Number", key: "patentNo" },
+      { label: "Patent Status", key: "patentStatus" },
     ],
     fac_researchProject: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Project Title', key: 'projectTitle' },
-      { label: 'Principal Investigator', key: 'pi' },
-      { label: 'Co-PI', key: 'coPi' },
-      { label: 'Funding Agency', key: 'fundingAgency' },
-      { label: 'Duration', key: 'duration' },
-      { label: 'Amount', key: 'amount' },
-      { label: 'Status', key: 'status' },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Project Title", key: "projectTitle" },
+      { label: "Principal Investigator", key: "pi" },
+      { label: "Co-PI", key: "coPi" },
+      { label: "Funding Agency", key: "fundingAgency" },
+      { label: "Duration", key: "duration" },
+      { label: "Amount", key: "amount" },
+      { label: "Status", key: "status" },
     ],
     fac_eventAttended: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Event Name', key: 'eventName' },
-      { label: 'Type of Event', key: 'typeOfEvent' },
-      { label: 'Organizer', key: 'organizer' },
-      { label: 'Venue', key: 'venue' },
-      { label: 'From Date', key: 'fromDate', isDate: true },
-      { label: 'To Date', key: 'toDate', isDate: true },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Event Name", key: "eventName" },
+      { label: "Type of Event", key: "typeOfEvent" },
+      { label: "Organizer", key: "organizer" },
+      { label: "Venue", key: "venue" },
+      { label: "From Date", key: "fromDate", isDate: true },
+      { label: "To Date", key: "toDate", isDate: true },
     ],
     fac_eventOrganized: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Event Name', key: 'eventName' },
-      { label: 'Type of Event', key: 'typeOfEvent' },
-      { label: 'Organizer', key: 'organizer' },
-      { label: 'Venue', key: 'venue' },
-      { label: 'From Date', key: 'fromDate', isDate: true },
-      { label: 'To Date', key: 'toDate', isDate: true },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Event Name", key: "eventName" },
+      { label: "Type of Event", key: "typeOfEvent" },
+      { label: "Organizer", key: "organizer" },
+      { label: "Venue", key: "venue" },
+      { label: "From Date", key: "fromDate", isDate: true },
+      { label: "To Date", key: "toDate", isDate: true },
     ],
     fac_consultancy: [
-      { label: 'Sl. No.', key: 'slno' },
-      { label: 'Employee ID', key: 'employee_id' },
-      { label: 'Project Title', key: 'projectTitle' },
-      { label: 'Principal Investigator', key: 'principalInvestigator' },
-      { label: 'Co-PI', key: 'coPrincipalInvestigator' },
-      { label: 'Sanctioned Date', key: 'sanctionedDate', isDate: true },
-      { label: 'Amount', key: 'amount' },
-      { label: 'Status', key: 'status' },
+      { label: "Sl. No.", key: "slno" },
+      { label: "Employee Name", key: "faculty_name" },
+      { label: "Project Title", key: "projectTitle" },
+      { label: "Principal Investigator", key: "principalInvestigator" },
+      { label: "Co-PI", key: "coPrincipalInvestigator" },
+      { label: "Sanctioned Date", key: "sanctionedDate", isDate: true },
+      { label: "Amount", key: "amount" },
+      { label: "Status", key: "status" },
     ],
   };
 
@@ -283,7 +289,7 @@ const ResearchTableDisplay = () => {
               <tr
                 key={idx}
                 className={`${
-                  idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                  idx % 2 === 0 ? "bg-gray-50" : "bg-white"
                 } hover:bg-blue-100`}
               >
                 {headers.map((header, index) => (
@@ -291,11 +297,11 @@ const ResearchTableDisplay = () => {
                     key={index}
                     className="px-4 py-2 text-sm border border-gray-300"
                   >
-                    {header.key === 'slno'
+                    {header.key === "slno"
                       ? idx + 1
                       : header.isDate
                       ? formatDate(row[header.key])
-                      : row[header.key] || 'N/A'}
+                      : row[header.key] || "N/A"}
                   </td>
                 ))}
               </tr>
@@ -307,7 +313,9 @@ const ResearchTableDisplay = () => {
   };
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Faculty Research Details</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">
+        Faculty Research Details
+      </h1>
       {error && <p className="text-red-500 text-center">{error}</p>}
       <div className="mb-6">
         <label className="block mb-2 font-medium">Select Branches:</label>
@@ -321,81 +329,81 @@ const ResearchTableDisplay = () => {
       </div>
       <div className="flex flex-wrap justify-center gap-4 mb-6">
         <button
-          onClick={() => setSelectedTable('fac_research')}
+          onClick={() => setSelectedTable("fac_research")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_research'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_research"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Research Details
         </button>
         <button
-          onClick={() => setSelectedTable('fac_bookPublication')}
+          onClick={() => setSelectedTable("fac_bookPublication")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_bookPublication'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_bookPublication"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Book Publications
         </button>
         <button
-          onClick={() => setSelectedTable('fac_conferenceAndJournal')}
+          onClick={() => setSelectedTable("fac_conferenceAndJournal")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_conferenceAndJournal'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_conferenceAndJournal"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Conference and Journals
         </button>
         <button
-          onClick={() => setSelectedTable('fac_patent')}
+          onClick={() => setSelectedTable("fac_patent")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_patent'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_patent"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Patents
         </button>
         <button
-          onClick={() => setSelectedTable('fac_researchProject')}
+          onClick={() => setSelectedTable("fac_researchProject")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_researchProject'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_researchProject"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Research Projects
         </button>
         <button
-          onClick={() => setSelectedTable('fac_eventAttended')}
+          onClick={() => setSelectedTable("fac_eventAttended")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_eventAttended'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_eventAttended"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Events Attended
         </button>
         <button
-          onClick={() => setSelectedTable('fac_eventOrganized')}
+          onClick={() => setSelectedTable("fac_eventOrganized")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_eventOrganized'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_eventOrganized"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Events Organized
         </button>
         <button
-          onClick={() => setSelectedTable('fac_consultancy')}
+          onClick={() => setSelectedTable("fac_consultancy")}
           className={`px-6 py-2 rounded-md font-semibold ${
-            selectedTable === 'fac_consultancy'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-blue-100'
+            selectedTable === "fac_consultancy"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 hover:bg-blue-100"
           }`}
         >
           Consultancies
@@ -420,8 +428,8 @@ const ResearchTableDisplay = () => {
             disabled={!startDate || !endDate}
             className={`px-6 py-2 rounded-md font-semibold ${
               startDate && endDate
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
             Apply Filter

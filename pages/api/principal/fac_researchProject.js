@@ -1,28 +1,22 @@
-import { connectToDatabase } from '../../../app/config/dbconfig';
+import { connectToDatabase } from "../../../app/config/dbconfig";
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     const { branch } = req.query;
-
-  
 
     try {
       const pool = await connectToDatabase();
       const query = `
       USE aittest;
-      SELECT t.employee_id, t.projectTitle, t.pi, t.coPi, t.dOfSanction, t.duration,
+      SELECT t.employee_id,fp.faculty_name,  t.projectTitle, t.pi, t.coPi, t.dOfSanction, t.duration,
              t.fundingAgency, t.amount, t.status
       FROM dbo.ResearchProjects AS t
       INNER JOIN dbo.facultyPersonalDetails AS fp
       ON t.employee_id = fp.employee_id;
      
     `;
-    
 
-      const result = await pool
-        .request()
-        .input('branch', branch)
-        .query(query);
+      const result = await pool.request().input("branch", branch).query(query);
 
       res.status(200).json({ data: result.recordset });
     } catch (error) {

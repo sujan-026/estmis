@@ -219,29 +219,33 @@ const HorizontalNavbar: React.FC = () => {
               {openMenu === "AcademicsR&D" && (
                 <ul className="absolute left-0 bg-white text-black mt-2 shadow-lg rounded z-50">
                   {[
-                    {
-                      label: "Bonafied Certificate",
-                      href: "/admission/adm_certificate_bonafied",
-                    },
-                    {
-                      label: "Study Certificate",
-                      href: "/admission/adm_study_certificate",
-                    },
-                    {
-                      label: "Transfer Certificate",
-                      href: "/admission/adm_certificate_tc",
-                    },
-                    {
-                      label: "Update Research",
-                      href: "/mis_faculty/profile/research-update",
-                    },
+                  {
+                    label: "Bonafied Certificate",
+                    href: "/admission/adm_certificate_bonafied",
+                  },
+                  {
+                    label: "Study Certificate",
+                    href: "/admission/adm_study_certificate",
+                  },
+                  {
+                    label: "Transfer Certificate",
+                    href: "/admission/adm_certificate_tc",
+                  },
+                  {
+                    label: "Update Research Details",
+                    href: "/mis_faculty/profile/research-update",
+                  },
+                  {
+                    label: "Add Research Details",
+                    href: `/faculty/faculty_reg/research`,
+                  },
                   ].map((item) => (
-                    <li
-                      key={item.label}
-                      className="hover:bg-gray-200 px-4 py-2 whitespace-nowrap"
-                    >
-                      <Link href={item.href}>{item.label}</Link>
-                    </li>
+                  <li
+                    key={item.label}
+                    className="hover:bg-gray-200 px-4 py-2 whitespace-nowrap"
+                  >
+                    <Link href={item.href}>{item.label}</Link>
+                  </li>
                   ))}
                 </ul>
               )}

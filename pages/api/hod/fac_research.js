@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
       const query = `
       USE aittest;
-      SELECT t.id, t.employee_id, t.orcidId, t.googleScholarId, t.scopusId, t.publonsId, t.researchId
+      SELECT t.id, t.employee_id, fp.faculty_name, t.orcidId, t.googleScholarId, t.scopusId, t.publonsId, t.researchId
       FROM dbo.FacultyResearchDetails AS t
       INNER JOIN dbo.facultyPersonalDetails AS fp
       ON t.employee_id = fp.employee_id

@@ -3,13 +3,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { z } from "zod";
-import { facultyResearchDetailsSchema } from "../../../../schemas/research-details";
+import { facultyResearchDetailsSchema } from "../../../schemas/research-details";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { identity, remove } from "lodash";
-import { Step } from "../../../../types/form";
-import FormField from "../../../../components/FormField";
-import { FormProvider } from "../../../../hooks/FormProvider";
+import { Step } from "../../../types/form";
+import FormField from "../../../components/FormField";
+import { FormProvider } from "../../../hooks/FormProvider";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -152,17 +152,20 @@ export default function Form() {
   //     }
   //   }, [facultyId, router]);
 
-  useEffect(() => {
-    const pathname = window.location.pathname; // Get the full path
-    const segments = pathname.split("/"); // Split path into segments
-    const idFromPath = segments[segments.length - 1]; // Get the last segment (facultyId)
-    console.log(idFromPath);
-    if (idFromPath) {
-      setFacultyId(idFromPath);
-    } else {
-      console.warn("Faculty ID is not present in the dynamic route.");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const pathname = window.location.pathname; // Get the full path
+  //   const segments = pathname.split("/"); // Split path into segments
+  //   const idFromPath = segments[segments.length - 1]; // Get the last segment (facultyId)
+  //   console.log(idFromPath);
+  //   if (idFromPath) {
+  //     setFacultyId(idFromPath);
+  //   } else {
+  //     console.warn("Faculty ID is not present in the dynamic route.");
+  //   }
+  // }, []);
+
+  const id = sessionStorage.getItem("emp_id");
+  console.log(id);
 
   const processForm: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
@@ -2481,7 +2484,7 @@ export default function Form() {
                           eventsAttendedSchema: data.eventsAttendedSchema,
                           eventsOrganizedSchema: data.eventsOrganizedSchema,
                           publicationsSchema: data.publicationsSchema,
-                          facultyId: facultyId,
+                          facultyId: id,
                         };
                         console.log("Payload being sent to API:", payload);
 

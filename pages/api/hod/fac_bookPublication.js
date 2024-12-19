@@ -1,20 +1,25 @@
-import { connectToDatabase } from '../../../app/config/dbconfig';
+import { connectToDatabase } from "../../../app/config/dbconfig";
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     const { branches } = req.query;
 
     if (!branches) {
-      return res.status(400).json({ message: "Branches parameter is required" });
+      return res
+        .status(400)
+        .json({ message: "Branches parameter is required" });
     }
 
     try {
       const pool = await connectToDatabase();
-      const branchList = branches.split(',').map((branch) => `'${branch.trim()}'`).join(',');
+      const branchList = branches
+        .split(",")
+        .map((branch) => `'${branch.trim()}'`)
+        .join(",");
 
       const query = `
         USE aittest;
-        SELECT t.id, t.publicationType, t.name, t.volume, t.pageNumber, t.issn, t.publisher, t.title,
+        SELECT t.id, t.publicationType,fp.faculty_name,  t.name, t.volume, t.pageNumber, t.issn, t.publisher, t.title,
                t.area, t.impactFactor, t.employee_id, t.yearOfPublish, t.authors
         FROM dbo.bookPublication AS t
         INNER JOIN dbo.facultyPersonalDetails AS fp

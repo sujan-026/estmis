@@ -350,6 +350,10 @@ export default function FacultyDetailsPage() {
     return <div className="container mx-auto p-4">Loading...</div>;
   }
 
+  const customLoader = ({ src, width, quality }: { src: string; width: number; quality?: number }) => {
+    return `http://192.168.29.12/Employee_photos/${src}`;
+  };
+
   return (
     <div>
       {/* <FacultyProfileNav /> */}
@@ -392,6 +396,15 @@ export default function FacultyDetailsPage() {
               width={100}
               height={100}
             />
+            {/* <Image
+              loader={customLoader}
+              // src={facultyDetails.employee_id + ".jpg"} // just the image name
+              src={'//192.168.29.12/Employee_photos/ECU03.jpg'} // just the image name
+              className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white shadow-lg"
+              alt="Employee ECU03"
+              width={100}
+              height={100}
+            /> */}
           </div>
 
           <div className="flex-1 text-center md:text-left">
@@ -1294,7 +1307,7 @@ export default function FacultyDetailsPage() {
               Teaching Experience
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(teachingExperience.length === 0 || "undefined")? (
+              {teachingExperience.length === 0 || "undefined" ? (
                 <p className="text-gray-500">
                   No teaching experience data available.
                 </p>

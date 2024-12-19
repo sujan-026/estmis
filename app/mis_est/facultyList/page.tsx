@@ -73,7 +73,7 @@ export default function FacultyInfoPage() {
             onChange={(e) => setSelectedDepartment(e.target.value)}
           >
             <option value="All">All Departments</option>
-            <option value="CS">Computer Science</option>
+            <option value="CS">CS</option>
             <option value="AE">AE</option>
             <option value="CH">CH</option>
             <option value="CB">CB</option>

@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
       const query = `
       USE aittest;
-      SELECT t.id, t.fromDate, t.toDate, t.organizer, t.venue, t.sponsor, t.targetAudience,
+      SELECT t.id, t.fromDate,fp.faculty_name,  t.toDate, t.organizer, t.venue, t.sponsor, t.targetAudience,
              t.employee_id, t.nameofevent, t.typeofevent
       FROM dbo.EventOrganized AS t
       INNER JOIN dbo.facultyPersonalDetails AS fp

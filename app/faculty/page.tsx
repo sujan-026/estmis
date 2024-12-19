@@ -110,6 +110,12 @@ const Page = () => {
             Submit
           </button>
         </form>
+          <button
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 mt-4 my-4"
+          onClick={() => router.push("/mis_est")}
+          >
+          Home
+          </button>
       </div>
     </div>
   );

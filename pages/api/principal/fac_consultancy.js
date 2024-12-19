@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       const pool = await connectToDatabase();
       const query = `
       USE aittest;
-      SELECT t.employee_id, t.sanctionedDate, t.projectPeriod, t.amount,
+      SELECT t.employee_id, t.sanctionedDate,fp.faculty_name,  t.projectPeriod, t.amount,
              t.principalInvestigator, t.coPrincipalInvestigator, t.status
       FROM dbo.Consultancy AS t
       INNER JOIN dbo.facultyPersonalDetails AS fp
