@@ -19,18 +19,18 @@
 //           return;
 //         }
 //         const data = await response.json();
-        // if (data) {
-        //   router.push(`/faculty/faculty_reg/${facultyId}`);
-        // } else {
-        //   alert("Faculty is not registered or does not exist.");
-        // }
-    //   } catch (error) {
-    //     console.error("Error:", error);
-    //     alert("An error occurred while checking faculty ID.");
-    //   }
-    // } else {
-    //   alert("Please enter a Faculty ID");
-    // }
+// if (data) {
+//   router.push(`/faculty/faculty_reg/${facultyId}`);
+// } else {
+//   alert("Faculty is not registered or does not exist.");
+// }
+//   } catch (error) {
+//     console.error("Error:", error);
+//     alert("An error occurred while checking faculty ID.");
+//   }
+// } else {
+//   alert("Please enter a Faculty ID");
+// }
 //   };
 //   return (
 //     <div>
@@ -76,9 +76,19 @@ const Page = () => {
         const data = await response.json();
         console.log(data.role);
 
-        if (data.role === "faculty" || data.role === "deanp" || data.role === "hod" || data.role === "dean-exam" || data.role === "principal") {
+        if (
+          data.role === "faculty" ||
+          data.role === "deanp" ||
+          data.role === "hod" ||
+          data.role === "dean-exam" ||
+          data.role === "principal"
+        ) {
           router.push(`/faculty/faculty_reg/${facultyId}`);
-        } else if(data.role === "non-teaching staff" || data.role === "staff") {
+        } else if (
+          data.role === "non-teaching staff" ||
+          data.role === "staff" ||
+          data.role === "Non-Teaching Staff"
+        ) {
           router.push(`/mis_non_teaching_staff/register/${facultyId}`);
         } else {
           alert("Faculty is not registered or does not exist.");
@@ -119,53 +129,53 @@ const Page = () => {
         //   }
         // }
 
-  //       if (
-  //         !data.isRegistered &&
-  //         [
-  //           "faculty",
-  //           "admin",
-  //           "hod",
-  //           "principal",
-  //           "dean",
-  //           "est",
-  //           "adm_admin",
-  //           "acc_admin",
-  //           "est_admin",
-  //           "dean-academic",
-  //         ].includes(data.role)
-  //       ) {
-  //         router.push(`/faculty/faculty_reg/${facultyId}`);
-  //       } else if (
-  //         data.isRegistered &&
-  //         [
-  //           "faculty",
-  //           "admin",
-  //           "hod",
-  //           "principal",
-  //           "dean",
-  //           "est",
-  //           "adm_admin",
-  //           "acc_admin",
-  //           "est_admin",
-  //           "dean-academic",
-  //         ].includes(data.role)
-  //       ) {
-  //         alert("Faculty already exists.");
-  //         router.push("mis_est");
-  //       } else if (
-  //         !data.isRegistered &&
-  //         ["non-teaching staff", "staff"].includes(data.role)
-  //       ) {
-  //         router.push(`/mis_non_teaching_staff/register/${facultyId}`);
-  //       } else if (
-  //         data.isRegistered &&
-  //         ["non-teaching staff", "staff"].includes(data.role)
-  //       ) {
-  //         alert("Non-Teaching Staff already exists.");
-  //         router.push("mis_est");
-  //       } else {
-  //         alert("The user is not registered or does not exist.");
-  //       }
+        //       if (
+        //         !data.isRegistered &&
+        //         [
+        //           "faculty",
+        //           "admin",
+        //           "hod",
+        //           "principal",
+        //           "dean",
+        //           "est",
+        //           "adm_admin",
+        //           "acc_admin",
+        //           "est_admin",
+        //           "dean-academic",
+        //         ].includes(data.role)
+        //       ) {
+        //         router.push(`/faculty/faculty_reg/${facultyId}`);
+        //       } else if (
+        //         data.isRegistered &&
+        //         [
+        //           "faculty",
+        //           "admin",
+        //           "hod",
+        //           "principal",
+        //           "dean",
+        //           "est",
+        //           "adm_admin",
+        //           "acc_admin",
+        //           "est_admin",
+        //           "dean-academic",
+        //         ].includes(data.role)
+        //       ) {
+        //         alert("Faculty already exists.");
+        //         router.push("mis_est");
+        //       } else if (
+        //         !data.isRegistered &&
+        //         ["non-teaching staff", "staff"].includes(data.role)
+        //       ) {
+        //         router.push(`/mis_non_teaching_staff/register/${facultyId}`);
+        //       } else if (
+        //         data.isRegistered &&
+        //         ["non-teaching staff", "staff"].includes(data.role)
+        //       ) {
+        //         alert("Non-Teaching Staff already exists.");
+        //         router.push("mis_est");
+        //       } else {
+        //         alert("The user is not registered or does not exist.");
+        //       }
       } catch (error) {
         console.error("Error:", error);
         alert("An error occurred while checking faculty ID.");
