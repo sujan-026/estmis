@@ -81,7 +81,12 @@ const Page = () => {
           data.role === "deanp" ||
           data.role === "hod" ||
           data.role === "dean-exam" ||
-          data.role === "principal"
+          data.role === "principal" ||
+          data.role === "acc_admin" ||
+          data.role === "admin" ||
+          data.role === "dean-academic" ||
+          data.role === "est" ||
+          data.role === "est_admin"
         ) {
           router.push(`/faculty/faculty_reg/${facultyId}`);
         } else if (
