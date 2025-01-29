@@ -14,9 +14,7 @@ export const nationalJournalDetailsSchema = z.array(
     pageNo: z.string().min(1, { message: "Page number from is required" }).optional().or(z.literal("")),
     authors: z.array(z.string().min(1, { message: "Author name cannot be empty" }))
     .min(1, { message: "At least one author is required" }).optional().or(z.literal("")),
-    publishedUnder: z.enum(["Web of Science", "Scopus", "Q1", "Q2", "Q3"], {
-      message: "Please select a publication",
-    }).optional().or(z.literal("")),
+    publishedUnder: z.string().min(1, { message: "Publication Type cannot be empty" }),
     issn: z.string().min(1, { message: "ISSN is required" }).optional().or(z.literal("")),  
     impactFactor: z.string().min(1, { message: "Impact factor is required" }).optional().or(z.literal("")),
     quartile:z.string().min(1, { message: "Quartile is required" }).optional().or(z.literal("")),
@@ -38,9 +36,7 @@ export const internationalJournalDetailsSchema = z.array(
     pageNo: z.string().min(1, { message: "Page number from is required" }).optional().or(z.literal("")),
     authors: z.array(z.string().min(1, { message: "Author name cannot be empty" }))
     .min(1, { message: "At least one author is required" }).optional().or(z.literal("")),
-    publishedUnder: z.enum(["Web of Science", "Scopus", "Q1", "Q2", "Q3"], {
-      message: "Please select a publication",
-    }).optional().or(z.literal("")),
+    publishedUnder: z.string().min(1, { message: "Publication Type cannot be empty" }),
     issn: z.string().min(1, { message: "ISSN is required" }).optional().or(z.literal("")),  
     impactFactor: z.string().min(1, { message: "Impact factor is required" }).optional().or(z.literal("")),
     quartile:z.string().min(1, { message: "Quartile is required" }).optional().or(z.literal("")),
@@ -62,9 +58,7 @@ export const nationalConferenceDetailsSchema = z.array(
     pageNo: z.string().min(1, { message: "Page number from is required" }).optional().or(z.literal("")),
     authors: z.array(z.string().min(1, { message: "Author name cannot be empty" }))
     .min(1, { message: "At least one author is required" }).optional().or(z.literal("")),
-    publishedUnder: z.enum(["Web of Science", "Scopus", "Q1", "Q2", "Q3"], {
-      message: "Please select a publication",
-    }).optional().or(z.literal("")),
+    publishedUnder: z.string().min(1, { message: "Publication Type cannot be empty" }),
     issn: z.string().min(1, { message: "ISSN is required" }).optional().or(z.literal("")),  
     impactFactor: z.string().min(1, { message: "Impact factor is required" }).optional().or(z.literal("")),
     quartile:z.string().min(1, { message: "Quartile is required" }).optional().or(z.literal("")),
@@ -148,9 +142,7 @@ export const internationalConferenceDetailsSchema = z.array(
     pageNo: z.string().min(1, { message: "Page number from is required" }).optional().or(z.literal("")),
     authors: z.array(z.string().min(1, { message: "Author name cannot be empty" }))
     .min(1, { message: "At least one author is required" }).optional().or(z.literal("")),
-    publishedUnder: z.enum(["Web of Science", "Scopus", "Q1", "Q2", "Q3"], {
-      message: "Please select a publication",
-    }).optional().or(z.literal("")),
+    publishedUnder: z.string().min(1, { message: "Publication Type cannot be empty" }),
     issn: z.string().min(1, { message: "ISSN is required" }).optional().or(z.literal("")),  
     impactFactor: z.string().min(1, { message: "Impact factor is required" }).optional().or(z.literal("")),
     quartile:z.string().min(1, { message: "Quartile is required" }).optional().or(z.literal("")),
