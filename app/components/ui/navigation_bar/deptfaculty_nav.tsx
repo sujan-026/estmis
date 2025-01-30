@@ -243,10 +243,6 @@ const HorizontalNavbar: React.FC = () => {
                       label: "Update Research Details",
                       href: `/fac_update/research/${facultyId}`,
                     },
-                    {
-                      label: "Add Research Details",
-                      href: `/faculty/faculty_reg/research`,
-                    },
                   ].map((item) => (
                     <li
                       key={item.label}
@@ -261,64 +257,13 @@ const HorizontalNavbar: React.FC = () => {
 
             {/* Profile */}
             <li className="relative border border-gray-300 rounded hover:border-blue-500">
-              <div
+              <Link
+                href="/mis_faculty/profile"
                 className="flex items-center space-x-2 cursor-pointer hover:bg-blue-500 py-2 px-2 rounded"
-                onClick={() => toggleSubmenu("Profile")}
               >
-                <GrCertificate className="text-sm" />
+                <FaHome className="text-sm" />
                 <span className="text-sm">Profile</span>
-                {openMenu === "Profile" ? <FaChevronUp /> : <FaChevronDown />}
-              </div>
-              {/* {openMenu === "Profile" && (
-                <ul className="absolute left-0 bg-white text-black mt-2 shadow-lg rounded z-50">
-                  {[
-                    {
-                      label: "Personal",
-                      href: "/mis_faculty/profile",
-                    },
-                    {
-                      label: "Academics",
-                      href: "/mis_faculty/profile/academics-details",
-                    },
-                    {
-                      label: "Research",
-                      href: "/mis_faculty/profile/research-details",
-                    },
-                  ].map((item) => (
-                    <li
-                      key={item.label}
-                      className="hover:bg-gray-200 px-4 py-2 whitespace-nowrap"
-                    >
-                      <Link href={item.href}>{item.label}</Link>
-                    </li>
-                  ))}
-                </ul>
-              )} */}
-              {openMenu === "Profile" && (
-                <ul className="absolute left-0 bg-white text-black mt-2 shadow-lg rounded z-50">
-                  {[
-                    {
-                      label: "Personal",
-                      href: "/mis_faculty/profile",
-                    },
-                    {
-                      label: "Academics",
-                      href: "/mis_faculty/profile",
-                    },
-                    {
-                      label: "Research",
-                      href: "/mis_faculty/profile",
-                    },
-                  ].map((item) => (
-                    <li
-                      key={item.label}
-                      className="hover:bg-gray-200 px-4 py-2 whitespace-nowrap"
-                    >
-                      <Link href={item.href}>{item.label}</Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              </Link>
             </li>
 
             {/* HoD role */}

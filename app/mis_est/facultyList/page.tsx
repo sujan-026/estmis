@@ -17,7 +17,8 @@ export default function FacultyInfoPage() {
   const [facultyList, setFacultyList] = useState<Faculty[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>(""); // For search functionality
   const [selectedDepartment, setSelectedDepartment] = useState<string>("All"); // For department filter
-  const [errorMessage, setErrorMessage] = useState<string>(""); // For error handling
+  const [errorMessage, setErrorMessage] = useState<string>(""); // For error handling  
+  const [branch, setBranch] = useState<Branch[]>([]);
   const router = useRouter();
 
   // Fetch Faculty Data
@@ -34,6 +35,23 @@ export default function FacultyInfoPage() {
       }
     }
     fetchFacultyData();
+  }, []);
+
+  // Fetch Branch
+  useEffect(() => {
+    async function fetchBranch() {
+      try {
+        const response = await fetch("/api/fetchBranch");
+        if (!response.ok) throw new Error("Failed to fetch branch.");
+        const data = await response.json();
+        console.log(data);
+        setBranch(data);
+      } catch (error) {
+        console.error("Error fetching branch:", error);
+        setErrorMessage("Failed to load branch.");
+      }
+    }
+    fetchBranch();
   }, []);
 
   // Filter Faculty
@@ -73,25 +91,20 @@ export default function FacultyInfoPage() {
             onChange={(e) => setSelectedDepartment(e.target.value)}
           >
             <option value="All">All Departments</option>
-            <option value="CS">CS</option>
-            <option value="AE">AE</option>
-            <option value="CH">CH</option>
-            <option value="CB">CB</option>
-            <option value="CV">CV</option>
-            <option value="EC">EC</option>
-            <option value="EE">EE</option>
-            <option value="HS">HS</option>
-            <option value="IM">IM</option>
-            <option value="IS">IS</option>
-            <option value="IT">IT</option>
-            <option value="MA">MA</option>
-            <option value="MBA">MBA</option>
-            <option value="MCA">MCA</option>
-            <option value="ME">ME</option>
-            <option value="ML">ML</option>
-            <option value="PH">PH</option>
-            <option value="TE">TE</option>
+            <option value="">Select Department</option>
+            {branch.map((br) => (
+              <option key={br.brcode} value={br.brcode}>
+                {br.brcode_title}
+              </option>
+            ))}
           </select>
+
+          <button
+            className="px-4 py-2 rounded-lg bg-blue-500 text-white"
+            onClick={() => router.push("/mis_est")}
+          >
+            Back
+          </button>
         </div>
       </nav>
 

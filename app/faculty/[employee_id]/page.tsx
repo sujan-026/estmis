@@ -213,15 +213,34 @@ interface TeachingExperienceDetails {
 interface ResearchProjectDetails {
   employee_id: string;
   projectTitle: string;
-  pi: string; 
-  coPi: string; 
-  dOfSanction: string; 
-  duration: string; 
-  fundingAgency: string; 
-  amount: number; 
-  status: string; 
+  pi: string;
+  coPi: string;
+  dOfSanction: string;
+  duration: string;
+  fundingAgency: string;
+  amount: number;
+  status: string;
 }
 
+interface ResearchExpDetails {
+  employee_id: string;
+  areaOfResearch: string;
+  from_date: string;
+  to_date: string;
+}
+
+interface ResearchSupervision {
+  id: number;
+  employee_id: string;
+  Research_Supervisor?: string;
+  Research_Scholar_Name?: string;
+  USN?: string;
+  University?: string;
+  Institute?: string;
+  Discipline?: string;
+  Title_Research?: string;
+  Status?: string;
+}
 
 
 export default function FacultyDetailsPage() {
@@ -237,10 +256,11 @@ export default function FacultyDetailsPage() {
     useState<facultyResearchDetails | null>(null);
   const [educationDetails, setEducationDetails] =
     useState<facultyEducationDetails | null>(null);
-  const [consultancyDetails, setConsultancyDetails] =
-    useState<facultyConsultancyDetails | null>(null);
+  const [consultancyDetails, setConsultancyDetails] = useState<
+    facultyConsultancyDetails[]
+  >([]);
   const [conferenceAndJournal, setConferenceAndJournal] =
-    useState<ConferenceAndJournalDetails | null>(null);
+    useState<ConferenceAndJournalDetails | null>([]);
   const [bookPublication, setBookPublication] =
     useState<BookPublicationDetails | null>(null);
   const [awardAndRecognition, setAwardAndRecognition] =
@@ -248,30 +268,40 @@ export default function FacultyDetailsPage() {
   const [addtionalResponsibility, setAddtionalResponsibility] =
     useState<AddtionalResponsibilityDetails | null>(null);
 
-     const [eventAttended, setEventAttended] = useState<EventAttendedDetails[]>(
-       []
-     );
-     const [eventOrganized, setEventOrganized] = useState<
-       EventOrganizedDetails[]
-     >([]);
-     const [industryExperience, setIndustryExperience] = useState<
-       IndustryExperienceDetails[]
-     >([]);
+  const [eventAttended, setEventAttended] = useState<EventAttendedDetails[]>(
+    []
+  );
+  const [eventOrganized, setEventOrganized] = useState<EventOrganizedDetails[]>(
+    []
+  );
+  const [industryExperience, setIndustryExperience] = useState<
+    IndustryExperienceDetails[]
+  >([]);
 
-      const [outreachActivity, setOutreachActivity] = useState<
-        OutreachActivityDetails[]
-      >([]);
-      const [patent, setPatent] = useState<PatentDetails[]>([]);
-      const [professionalMembers, setProfessionalMembers] = useState<
-        ProfessionalMembersDetails[]
-      >([]);
-      const [teachingExperience, setTeachingExperience] = useState<
-        TeachingExperienceDetails[]
-      >([]);
-      const [researchProjects, setResearchProjects] = useState<
-        ResearchProjectDetails[]
-      >([]);
+  const [outreachActivity, setOutreachActivity] = useState<
+    OutreachActivityDetails[]
+  >([]);
+  const [patent, setPatent] = useState<PatentDetails[]>([]);
+  const [professionalMembers, setProfessionalMembers] = useState<
+    ProfessionalMembersDetails[]
+  >([]);
+  const [teachingExperience, setTeachingExperience] = useState<
+    TeachingExperienceDetails[]
+  >([]);
+  const [researchProjects, setResearchProjects] = useState<
+    ResearchProjectDetails[]
+  >([]);
+  const [researchExp, setResearchExp] = useState<
+    ResearchExpDetails[]
+  >([]);
+  const [researchSupervision, setResearchSupervision] = useState<
+    ResearchSupervision[]
+  >([]);
 
+
+  useEffect(() => {
+    console.log("Client-side log"); // This appears in the browser's console
+  }, []);
 
   useEffect(() => {
     async function fetchFacultyDetails() {
@@ -292,23 +322,27 @@ export default function FacultyDetailsPage() {
         }
 
         const data = await response.json();
-        console.log(data.researchProjects);
         setFacultyDetails(data.personalDetails);
         setResearchDetails(data.researchDetails);
         setEducationDetails(data.educationDetails);
+        console.log(data.consultancyDetails);
         setConsultancyDetails(data.consultancyDetails);
         setConferenceAndJournal(data.conferenceAndJournal);
+        console.log(data.conferenceAndJournal);
         setBookPublication(data.bookPublication);
         setAwardAndRecognition(data.awardAndRecognition);
         setAddtionalResponsibility(data.addtionalResponsibility);
-         setEventAttended(data.eventAttended);
-         setEventOrganized(data.eventOrganized );
-         setIndustryExperience(data.industryExperience);
-          setOutreachActivity(data.outreachActivity);
-          setPatent(data.patent);
-          setProfessionalMembers(data.setProfessionalMembers);
-          setTeachingExperience(data.teachingExperience);
-          setResearchProjects(data.researchProjects);
+        setEventAttended(data.eventAttended);
+        setEventOrganized(data.eventOrganized);
+        setIndustryExperience(data.industryExperience);
+        setOutreachActivity(data.outreachActivity);
+        console.log(data.patent);
+        setPatent(data.patent);
+        setProfessionalMembers(data.setProfessionalMembers);
+        setTeachingExperience(data.teachingExperience);
+        setResearchProjects(data.researchProjects);
+        setResearchExp(data.researchExp);
+        setResearchSupervision(data.researchSuperVision);
       } catch (error) {
         console.error("Error fetching faculty details:", error);
         if (error instanceof Error) {
@@ -357,27 +391,30 @@ export default function FacultyDetailsPage() {
   return (
     <div>
       {/* <FacultyProfileNav /> */}
-      <nav className="flex items-center justify-end gap-4 mr-4 mt-2 text-xl text-blue-500 font-bold">
+      <nav
+        className="flex items-center justify-end gap-4 mr-4 mt-2 text-xl text-blue-500 font-bold
+        bg-white shadow-md sticky top-0 z-50 p-4"
+      >
         <a
-          className={`link hover:underline underline-offset-3`}
+          className="link hover:underline underline-offset-3"
           href="/mis_faculty/faculty_home"
         >
           Home
         </a>
         <a
-          className={`link hover:underline underline-offset-3`}
+          className="link hover:underline underline-offset-3"
           href="#personal-section"
         >
           Personal Details
         </a>
         <a
-          className={`link hover:underline underline-offset-3`}
+          className="link hover:underline underline-offset-3"
           href="#education-section"
         >
           Academic Details
         </a>
         <a
-          className={`link hover:underline underline-offset-3 `}
+          className="link hover:underline underline-offset-3"
           href="#research-section"
         >
           Research Details
@@ -411,6 +448,7 @@ export default function FacultyDetailsPage() {
             <div className="bg-gray-50 p-3 rounded-lg">
               <p className="text-sm text-gray-500">Name</p>
               <p className="font-medium text-gray-800">
+                <span className="">{facultyDetails.title}</span>{" "}
                 {facultyDetails.faculty_name}
               </p>
             </div>
@@ -495,7 +533,7 @@ export default function FacultyDetailsPage() {
             <div className="space-y-1">
               <p className="text-sm text-gray-500">Date of Birth</p>
               <p className="font-medium text-gray-800">
-                {facultyDetails.dob || "N/A"}
+                {facultyDetails.dob?.split("T")[0] || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
@@ -560,12 +598,32 @@ export default function FacultyDetailsPage() {
                 {facultyDetails.remarks || "N/A"}
               </p>
             </div>
-            {/* <div className="space-y-1">
-            <p className="text-sm text-gray-500">Languages</p>
-            <p className="font-medium text-gray-800">
-              {facultyDetails.data.languages || "N/A"}
-            </p>
-          </div> */}
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Languages</p>
+              <div className="font-medium text-gray-800 space-y-1">
+                {facultyDetails.languages ? (
+                  (() => {
+                    let languages = [];
+                    try {
+                      // Check if it's a JSON string and parse it
+                      languages = Array.isArray(facultyDetails.languages)
+                        ? facultyDetails.languages // Already an array
+                        : JSON.parse(facultyDetails.languages); // JSON string
+                    } catch (e) {
+                      // Fallback for comma-separated string
+                      languages = facultyDetails.languages
+                        .split(",")
+                        .map((lang) => lang.trim());
+                    }
+                    return languages.map((language, index) => (
+                      <p key={index}>{language}</p>
+                    ));
+                  })()
+                ) : (
+                  <p>N/A</p>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Bank details */}
@@ -638,13 +696,13 @@ export default function FacultyDetailsPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1">
-                <p className="text-sm text-gray-500">Mother's Name</p>
+                <p className="text-sm text-gray-500">Mother&apos;s Name</p>
                 <p className="font-medium text-gray-800">
                   {facultyDetails.motherName || "N/A"}
                 </p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm text-gray-500">Father's Name</p>
+                <p className="text-sm text-gray-500">Father&apos;s Name</p>
                 <p className="font-medium text-gray-800">
                   {facultyDetails.fatherName || "N/A"}
                 </p>
@@ -653,6 +711,12 @@ export default function FacultyDetailsPage() {
                 <p className="text-sm text-gray-500">Spouse Name</p>
                 <p className="font-medium text-gray-800">
                   {facultyDetails.spouseName || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Number of children</p>
+                <p className="font-medium text-gray-800">
+                  {facultyDetails.children || "N/A"}
                 </p>
               </div>
             </div>
@@ -737,13 +801,13 @@ export default function FacultyDetailsPage() {
             <div className="space-y-1">
               <p className="text-sm text-gray-500">From Date</p>
               <p className="font-medium text-gray-800">
-                {addtionalResponsibility?.fromDate || "N/A"}
+                {addtionalResponsibility?.fromDate?.split("T")[0] || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
               <p className="text-sm text-gray-500">To Date</p>
               <p className="font-medium text-gray-800">
-                {addtionalResponsibility?.toDate || "N/A"}
+                {addtionalResponsibility?.toDate?.split("T")[0] || "N/A"}
               </p>
             </div>
           </div>
@@ -800,611 +864,710 @@ export default function FacultyDetailsPage() {
             Consultancy Details
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Sanctioned Date</p>
-              <p className="font-medium text-gray-800">
-                {consultancyDetails?.sanctionedDate || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Project Period</p>
-              <p className="font-medium text-gray-800">
-                {consultancyDetails?.projectPeriod || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Amount</p>
-              <p className="font-medium text-gray-800">
-                {consultancyDetails?.amount ?? "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Principal Investigator</p>
-              <p className="font-medium text-gray-800">
-                {consultancyDetails?.principalInvestigator || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Co-Principal Investigator</p>
-              <p className="font-medium text-gray-800">
-                {consultancyDetails?.coPrincipalInvestigator || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Status</p>
-              <p className="font-medium text-gray-800">
-                {consultancyDetails?.status || "N/A"}
-              </p>
-            </div>
-          </div>
-
-          {/* Book Publication */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="conference-journal-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Book Publication
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.typeOfPublication || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Name</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.title || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Volume</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.doi || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Page</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.issn || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.issn || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.publsiher || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.title || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.area || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.impactFactor || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.yearOfPublication || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {bookPublication?.authors || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* ConferenceAndJournal */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="book-publication-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Conference And Journal
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Publication Type</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.typeOfPublication || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Title</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.title || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">DOI</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.doi || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">ISSN</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.issn || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Name</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.joConName || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Year Of Publication</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.yearOfPublication || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Page Number</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.pageNo || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Authors</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.authors || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Published Under</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.publishedUnder || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Impact Factor</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.impactFactor || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Quartile</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.quartile || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Sponsor</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.sponsor || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Venue</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.venue || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Volume</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.volume || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Issue Number</p>
-                <p className="font-medium text-gray-800">
-                  {conferenceAndJournal?.issueNo || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Award & Recognition */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="award-recognition-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Award & Recognition
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">
-                  Recognition Award Received
-                </p>
-                <p className="font-medium text-gray-800">
-                  {awardAndRecognition?.recognitionorawardReceived || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Recognition Award From</p>
-                <p className="font-medium text-gray-800">
-                  {awardAndRecognition?.recognitionorawardFrom || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Award Received Date</p>
-                <p className="font-medium text-gray-800">
-                  {awardAndRecognition?.awardReceived || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Recognition award Date</p>
-                <p className="font-medium text-gray-800">
-                  {awardAndRecognition?.recognitionorawardDate || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Award Date</p>
-                <p className="font-medium text-gray-800">
-                  {awardAndRecognition?.recognitionorawardDate || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Award From</p>
-                <p className="font-medium text-gray-800">
-                  {awardAndRecognition?.recognitionorawardDate || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Events Attended */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="event-attended-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Events Attended
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Event Name</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.nameofevent || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Event</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.typeofevent || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Organizer</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.organizer || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Venue</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.venue || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Sponsor</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.sponsor || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Target Audience</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.targetAudience || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">From Date</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.fromDate || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">To Date</p>
-                <p className="font-medium text-gray-800">
-                  {eventAttended?.toDate || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Events Organized */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="event-organized-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Events Organized
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Event Name</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.nameofevent || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Type of Event</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.typeofevent || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Organizer</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.organizer || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Venue</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.venue || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Sponsor</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.sponsor || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Target Audience</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.targetAudience || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">From Date</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.fromDate || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">To Date</p>
-                <p className="font-medium text-gray-800">
-                  {eventOrganized?.toDate || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Outreach Activity */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="outreach-activity-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Outreach Activities
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {outreachActivity.length === 0 ? (
-                <p className="text-gray-500">
-                  No outreach activity data available.
-                </p>
-              ) : (
-                outreachActivity.map((activity) => (
-                  <div key={activity.id} className="space-y-1">
-                    <p className="text-lg text-black font-weight: 800">
-                      Activity {activity.id}
-                    </p>
-                    <p className="font-medium text-gray-800">
-                      {activity.activity || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Role</p>
-                    <p className="font-medium text-gray-800">
-                      {activity.role || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Place</p>
-                    <p className="font-medium text-gray-800">
-                      {activity.place || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">From Date</p>
-                    <p className="font-medium text-gray-800">
-                      {activity.fromDate || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">To Date</p>
-                    <p className="font-medium text-gray-800">
-                      {activity.toDate || "N/A"}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Patent */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="patent-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Patents
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {patent.length === 0 ? (
-                <p className="text-gray-500">No patent data available.</p>
-              ) : (
-                patent.map((item) => (
-                  <div key={item.id} className="space-y-1">
-                    <p className="text-sm text-black font-weight:500">
-                      Patent {item.id}
-                    </p>
-                    <p className="text-sm text-gray-500">Area of Research</p>
-                    <p className="font-medium text-gray-800">
-                      {item.areaOfResearch || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Granted Year</p>
-                    <p className="font-medium text-gray-800">
-                      {item.grantedYear || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Patent Number</p>
-                    <p className="font-medium text-gray-800">
-                      {item.patentNo || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Patent Status</p>
-                    <p className="font-medium text-gray-800">
-                      {item.patentStatus || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Author</p>
-                    <p className="font-medium text-gray-800">
-                      {item.author || "N/A"}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Professional Memberships */}
-          {/* <div className="mt-8 pt-8 border-t border-gray-200" id="professional-membership-section">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Professional Memberships</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {professionalMembers.length === 0 ? (
-              <p className="text-gray-500">No professional memberships data available.</p>
-            ) : (
-              professionalMembers.map((membership, index) => (
+            {consultancyDetails ? (
+              Object.entries(consultancyDetails).map(([key, value], index) => (
                 <div key={index} className="space-y-1">
-                  <p className="text-sm text-gray-500">Professional Body</p>
-                  <p className="font-medium text-gray-800">{membership.professionalBody || "N/A"}</p>
-                  <p className="text-sm text-gray-500">Membership ID</p>
-                  <p className="font-medium text-gray-800">{membership.membershipId || "N/A"}</p>
-                  <p className="text-sm text-gray-500">Membership Since</p>
-                  <p className="font-medium text-gray-800">{membership.membershipSince || "N/A"}</p>
-                  <p className="text-sm text-gray-500">Membership Type</p>
-                  <p className="font-medium text-gray-800">{membership.membershipType || "N/A"}</p>
+                  <p className="text-sm text-black font-weight:500">
+                    Consultancy {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Sanctioned Date</p>
+                  <p className="font-medium text-gray-800">
+                    {value.sanctionedDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Project Period</p>
+                  <p className="font-medium text-gray-800">
+                    {value.projectPeriod || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Amount</p>
+                  <p className="font-medium text-gray-800">
+                    {value.amount || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Principal Investigator
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {value.principalInvestigator || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Co-Principal Investigator
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {value.coPrincipalInvestigator || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="font-medium text-gray-800">
+                    {value.status || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No consultancy data available.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Book Publication */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="conference-bookPublication-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Book Publication
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Type of Publication</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.publicationType || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Name</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.name || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Volume</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.volume || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Page</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.pageNumber || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">ISSN</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.issn || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Publisher</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.publsiher || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Title</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.title || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Type of Publication</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.title || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Area</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.area || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Impact Factor</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.impactFactor || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Year Of Publish</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.yearOfPublication || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-500">Authors</p>
+              <p className="font-medium text-gray-800">
+                {bookPublication?.authors || "N/A"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ConferenceAndJournal */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="book-publication-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Conference And Journal
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {conferenceAndJournal ? (
+              Object.entries(conferenceAndJournal).map(
+                ([key, value], index) => (
+                  <div key={index} className="space-y-1">
+                    <p className="text-sm text-black font-weight:500">
+                      Conference And Journal {index + 1}
+                    </p>
+                    <p className="text-sm text-gray-500">Publication Type</p>
+                    <p className="font-medium text-gray-800">
+                      {value.typeOfPublication || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Title</p>
+                    <p className="font-medium text-gray-800">
+                      {value.title || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">DOI</p>
+                    <p className="font-medium text-gray-800">
+                      {value.doi || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">ISSN</p>
+                    <p className="font-medium text-gray-800">
+                      {value.issn || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Name</p>
+                    <p className="font-medium text-gray-800">
+                      {value.joConName || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Year Of Publication</p>
+                    <p className="font-medium text-gray-800">
+                      {value.yearOfPublication || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Page Number</p>
+                    <p className="font-medium text-gray-800">
+                      {value.pageNo || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Authors</p>
+                    <p className="font-medium text-gray-800">
+                      {value.authors || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Published Under</p>
+                    <p className="font-medium text-gray-800">
+                      {value.publishedUnder || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Impact Factor</p>
+                    <p className="font-medium text-gray-800">
+                      {value.impactFactor || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Quartile</p>
+                    <p className="font-medium text-gray-800">
+                      {value.quartile || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Sponsor</p>
+                    <p className="font-medium text-gray-800">
+                      {value.sponsor || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Venue</p>
+                    <p className="font-medium text-gray-800">
+                      {value.venue || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Volume</p>
+                    <p className="font-medium text-gray-800">
+                      {value.volume || "N/A"}
+                    </p>
+                    <p className="text-sm text-gray-500">Issue Number</p>
+                    <p className="font-medium text-gray-800">
+                      {value.issueNo || "N/A"}
+                    </p>
+                  </div>
+                )
+              )
+            ) : (
+              <p className="text-gray-500">
+                No conference and journal data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Award & Recognition */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="award-recognition-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Award & Recognition
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {awardAndRecognition ? (
+              Object.entries(awardAndRecognition).map(([key, value], index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Award & Recognition {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Recognition Award Received
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {value.recognitionorawardReceived || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Recognition Award From
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {value.recognitionorawardFrom || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Award Received Date</p>
+                  <p className="font-medium text-gray-800">
+                    {value.awardReceived || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Recognition Award Date
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {value.recognitionorawardDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Award Date</p>
+                  <p className="font-medium text-gray-800">
+                    {value.awardDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Award From</p>
+                  <p className="font-medium text-gray-800">
+                    {value.awardFrom || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No award and recognition data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Events Attended */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="event-attended-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Events Attended
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {eventAttended && eventAttended.length > 0 ? (
+              eventAttended.map((event, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Event {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Event Name</p>
+                  <p className="font-medium text-gray-800">
+                    {event.nameofevent || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Type of Event</p>
+                  <p className="font-medium text-gray-800">
+                    {event.typeofevent || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Organizer</p>
+                  <p className="font-medium text-gray-800">
+                    {event.organizer || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Venue</p>
+                  <p className="font-medium text-gray-800">
+                    {event.venue || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Sponsor</p>
+                  <p className="font-medium text-gray-800">
+                    {event.sponsor || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Target Audience</p>
+                  <p className="font-medium text-gray-800">
+                    {event.targetAudience || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">From Date</p>
+                  <p className="font-medium text-gray-800">
+                    {event.fromDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">To Date</p>
+                  <p className="font-medium text-gray-800">
+                    {event.toDate || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No event data available.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Events Organized */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="event-organized-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Events Organized
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {eventOrganized && eventOrganized.length > 0 ? (
+              eventOrganized.map((event, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Event Organized {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Event Name</p>
+                  <p className="font-medium text-gray-800">
+                    {event.nameofevent || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Type of Event</p>
+                  <p className="font-medium text-gray-800">
+                    {event.typeofevent || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Organizer</p>
+                  <p className="font-medium text-gray-800">
+                    {event.organizer || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Venue</p>
+                  <p className="font-medium text-gray-800">
+                    {event.venue || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Sponsor</p>
+                  <p className="font-medium text-gray-800">
+                    {event.sponsor || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Target Audience</p>
+                  <p className="font-medium text-gray-800">
+                    {event.targetAudience || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">From Date</p>
+                  <p className="font-medium text-gray-800">
+                    {event.fromDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">To Date</p>
+                  <p className="font-medium text-gray-800">
+                    {event.toDate || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No event organized data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Outreach Activity */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="outreach-activity-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Outreach Activities
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {outreachActivity.length === 0 ? (
+              <p className="text-gray-500">
+                No outreach activity data available.
+              </p>
+            ) : (
+              outreachActivity.map((activity) => (
+                <div key={activity.id} className="space-y-1">
+                  <p className="text-lg text-black font-weight: 800">
+                    Activity {activity.id}
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {activity.activity || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Role</p>
+                  <p className="font-medium text-gray-800">
+                    {activity.role || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Place</p>
+                  <p className="font-medium text-gray-800">
+                    {activity.place || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">From Date</p>
+                  <p className="font-medium text-gray-800">
+                    {activity.fromDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">To Date</p>
+                  <p className="font-medium text-gray-800">
+                    {activity.toDate || "N/A"}
+                  </p>
                 </div>
               ))
             )}
           </div>
-        </div> */}
-
-          {/* Teaching Experience */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="teaching-experience-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Teaching Experience
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {teachingExperience.length === 0 || "undefined" ? (
-                <p className="text-gray-500">
-                  No teaching experience data available.
-                </p>
-              ) : (
-                teachingExperience.map((experience) => (
-                  <div key={experience.id} className="space-y-1">
-                    <p className="text-sm text-gray-500">Institute Name</p>
-                    <p className="font-medium text-gray-800">
-                      {experience.instituteName || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Designation</p>
-                    <p className="font-medium text-gray-800">
-                      {experience.Designation || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Department Name</p>
-                    <p className="font-medium text-gray-800">
-                      {experience.departmentName || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">From Date</p>
-                    <p className="font-medium text-gray-800">
-                      {experience.fromDate || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">To Date</p>
-                    <p className="font-medium text-gray-800">
-                      {experience.toDate || "N/A"}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-          {/* Research Projects */}
-          <div
-            className="mt-8 pt-8 border-t border-gray-200"
-            id="research-projects-section"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Research Projects
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Project Title</p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects.projectTitle || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">
-                  Principal Investigator (PI)
-                </p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.pi || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">
-                  Co-Principal Investigator (Co-PI)
-                </p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.coPi || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Date of Sanction</p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.dOfSanction || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Duration</p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.duration || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Funding Agency</p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.fundingAgency || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Amount</p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.amount || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-500">Status</p>
-                <p className="font-medium text-gray-800">
-                  {researchProjects?.status || "N/A"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/*  */}
         </div>
+
+        {/* Patent */}
+        <div className="mt-8 pt-8 border-t border-gray-200" id="patent-section">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Patents</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {patent && patent.length > 0 ? (
+              patent.map((item, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Patent {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Area of Research</p>
+                  <p className="font-medium text-gray-800">
+                    {item.areaOfResearch || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Granted Year</p>
+                  <p className="font-medium text-gray-800">
+                    {item.grantedYear || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Patent Number</p>
+                  <p className="font-medium text-gray-800">
+                    {item.patentNo || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Patent Status</p>
+                  <p className="font-medium text-gray-800">
+                    {item.patentStatus || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Author</p>
+                  <p className="font-medium text-gray-800">
+                    {item.author || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No patent data available.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Professional Members */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="professional-membership-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Professional Memberships
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {professionalMembers && professionalMembers.length > 0 ? (
+              professionalMembers.map((membership, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Professional Membership {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Professional Body</p>
+                  <p className="font-medium text-gray-800">
+                    {membership.professionalBody || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Membership ID</p>
+                  <p className="font-medium text-gray-800">
+                    {membership.membershipId || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Membership Since</p>
+                  <p className="font-medium text-gray-800">
+                    {membership.membershipSince || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Membership Type</p>
+                  <p className="font-medium text-gray-800">
+                    {membership.membershipType || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No professional memberships data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Teaching Experience */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="teaching-experience-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Teaching Experience
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {teachingExperience && teachingExperience.length > 0 ? (
+              teachingExperience.map((experience, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Teaching Experience {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Institute Name</p>
+                  <p className="font-medium text-gray-800">
+                    {experience.instituteName || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Designation</p>
+                  <p className="font-medium text-gray-800">
+                    {experience.Designation || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Department Name</p>
+                  <p className="font-medium text-gray-800">
+                    {experience.departmentName || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">From Date</p>
+                  <p className="font-medium text-gray-800">
+                    {experience.fromDate || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">To Date</p>
+                  <p className="font-medium text-gray-800">
+                    {experience.toDate || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No teaching experience data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Research Projects */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="research-projects-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Research Projects
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {researchProjects && researchProjects.length > 0 ? (
+              researchProjects.map((project, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Research Project {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Project Title</p>
+                  <p className="font-medium text-gray-800">
+                    {project.projectTitle || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Principal Investigator (PI)
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {project.pi || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Co-Principal Investigator (Co-PI)
+                  </p>
+                  <p className="font-medium text-gray-800">
+                    {project.coPi || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Date of Sanction</p>
+                  <p className="font-medium text-gray-800">
+                    {project.dOfSanction || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Duration</p>
+                  <p className="font-medium text-gray-800">
+                    {project.duration || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Funding Agency</p>
+                  <p className="font-medium text-gray-800">
+                    {project.fundingAgency || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Amount</p>
+                  <p className="font-medium text-gray-800">
+                    {project.amount || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="font-medium text-gray-800">
+                    {project.status || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No research project data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Research Experience */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="research-projects-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Research Experience
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {researchExp && researchExp.length > 0 ? (
+              researchExp.map((project, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Research Project {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Area Of Research</p>
+                  <p className="font-medium text-gray-800">
+                    {project.areaOfResearch || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">From Date</p>
+                  <p className="font-medium text-gray-800">
+                    {project.from_date || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">To Date</p>
+                  <p className="font-medium text-gray-800">
+                    {project.to_date || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No research project data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Research SuperVision */}
+        <div
+          className="mt-8 pt-8 border-t border-gray-200"
+          id="research-supervision-section"
+        >
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Research Supervision
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {researchSupervision && researchSupervision.length > 0 ? (
+              researchSupervision.map((item, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Research Supervision {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Research Supervisor</p>
+                  <p className="font-medium text-gray-800">
+                    {item.Research_Supervisor || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Research Scholar Name</p>
+                  <p className="font-medium text-gray-800">
+                    {item.Research_Scholar_Name || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">USN</p>
+                  <p className="font-medium text-gray-800">
+                    {item.USN || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">University</p>
+                  <p className="font-medium text-gray-800">
+                    {item.University || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Institute</p>
+                  <p className="font-medium text-gray-800">
+                    {item.Institute || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Discipline</p>
+                  <p className="font-medium text-gray-800">
+                    {item.Discipline || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Title of Research</p>
+                  <p className="font-medium text-gray-800">
+                    {item.Title_Research || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="font-medium text-gray-800">
+                    {item.Status || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No research supervision data available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/*  */}
       </div>
     </div>
   );
