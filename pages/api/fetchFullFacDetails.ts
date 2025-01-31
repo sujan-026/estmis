@@ -493,8 +493,8 @@ export default async function handler(req, res) {
       awardAndRecognition: awardAndRecognitionResult.recordset || null,
       addtionalResponsibility:
         addtionalResponsibilityResult.recordset[0] || null,
-      eventAttended: eventAttendedResult.recordset[0] || null,
-      eventOrganized: eventOrganizedResult.recordset[0] || null,
+      eventAttended: eventAttendedResult.recordset || null,
+      eventOrganized: eventOrganizedResult.recordset || null,
       industryExperience: industryExperienceResult.recordset || [],
       outreachActivity: outreachActivityResult.recordset || [],
       patent: patentResult.recordset || [],

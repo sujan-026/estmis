@@ -338,7 +338,7 @@ export default function FacultyDetailsPage() {
         setOutreachActivity(data.outreachActivity);
         console.log(data.patent);
         setPatent(data.patent);
-        setProfessionalMembers(data.setProfessionalMembers);
+        setProfessionalMembers(data.professionalMembers);
         setTeachingExperience(data.teachingExperience);
         setResearchProjects(data.researchProjects);
         setResearchExp(data.researchExp);
@@ -829,25 +829,25 @@ export default function FacultyDetailsPage() {
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-500">Father's Name</p>
+              <p className="text-sm text-gray-500">Orcid Id</p>
               <p className="font-medium text-gray-800">
                 {researchDetails?.orcidId || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-500">Spouse Name</p>
+              <p className="text-sm text-gray-500">Scopus Id</p>
               <p className="font-medium text-gray-800">
                 {researchDetails?.scopusId || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-500">Spouse Name</p>
+              <p className="text-sm text-gray-500">Publons Id</p>
               <p className="font-medium text-gray-800">
                 {researchDetails?.publonsId || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-500">Spouse Name</p>
+              <p className="text-sm text-gray-500">Research Id</p>
               <p className="font-medium text-gray-800">
                 {researchDetails?.researchId || "N/A"}
               </p>
@@ -999,76 +999,158 @@ export default function FacultyDetailsPage() {
             Conference And Journal
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {conferenceAndJournal ? (
-              Object.entries(conferenceAndJournal).map(
-                ([key, value], index) => (
-                  <div key={index} className="space-y-1">
-                    <p className="text-sm text-black font-weight:500">
-                      Conference And Journal {index + 1}
-                    </p>
-                    <p className="text-sm text-gray-500">Publication Type</p>
-                    <p className="font-medium text-gray-800">
-                      {value.typeOfPublication || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Title</p>
-                    <p className="font-medium text-gray-800">
-                      {value.title || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">DOI</p>
-                    <p className="font-medium text-gray-800">
-                      {value.doi || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">ISSN</p>
-                    <p className="font-medium text-gray-800">
-                      {value.issn || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Name</p>
-                    <p className="font-medium text-gray-800">
-                      {value.joConName || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Year Of Publication</p>
-                    <p className="font-medium text-gray-800">
-                      {value.yearOfPublication || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Page Number</p>
-                    <p className="font-medium text-gray-800">
-                      {value.pageNo || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Authors</p>
-                    <p className="font-medium text-gray-800">
-                      {value.authors || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Published Under</p>
-                    <p className="font-medium text-gray-800">
-                      {value.publishedUnder || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Impact Factor</p>
-                    <p className="font-medium text-gray-800">
-                      {value.impactFactor || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Quartile</p>
-                    <p className="font-medium text-gray-800">
-                      {value.quartile || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Sponsor</p>
-                    <p className="font-medium text-gray-800">
-                      {value.sponsor || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Venue</p>
-                    <p className="font-medium text-gray-800">
-                      {value.venue || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Volume</p>
-                    <p className="font-medium text-gray-800">
-                      {value.volume || "N/A"}
-                    </p>
-                    <p className="text-sm text-gray-500">Issue Number</p>
-                    <p className="font-medium text-gray-800">
-                      {value.issueNo || "N/A"}
-                    </p>
-                  </div>
-                )
-              )
+            {conferenceAndJournal && conferenceAndJournal.length > 0 ? (
+              <>
+                {/* National Journals (NJ, National Journal) */}
+                {conferenceAndJournal
+                  .filter((item) =>
+                    ["NJ", "National Journal"].includes(item.typeOfPublication)
+                  )
+                  .map((value, index) => (
+                    <div
+                      key={`national-journal-${index}`}
+                      className="space-y-1"
+                    >
+                      <p className="text-lg font-semibold text-blue-600">
+                        National Journal {index + 1}
+                      </p>
+                      <p className="text-sm text-gray-500">Title</p>
+                      <p className="font-medium text-gray-800">
+                        {value.title || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">DOI</p>
+                      <p className="font-medium text-gray-800">
+                        {value.doi || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">ISSN</p>
+                      <p className="font-medium text-gray-800">
+                        {value.issn || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Year Of Publication
+                      </p>
+                      <p className="font-medium text-gray-800">
+                        {value.yearOfPublication || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">Authors</p>
+                      <p className="font-medium text-gray-800">
+                        {value.authors || "N/A"}
+                      </p>
+                    </div>
+                  ))}
+
+                {/* International Journals (IJ, International Journal) */}
+                {conferenceAndJournal
+                  .filter((item) =>
+                    ["IJ", "International Journal"].includes(
+                      item.typeOfPublication
+                    )
+                  )
+                  .map((value, index) => (
+                    <div
+                      key={`international-journal-${index}`}
+                      className="space-y-1"
+                    >
+                      <p className="text-lg font-semibold text-green-600">
+                        International Journal {index + 1}
+                      </p>
+                      <p className="text-sm text-gray-500">Title</p>
+                      <p className="font-medium text-gray-800">
+                        {value.title || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">DOI</p>
+                      <p className="font-medium text-gray-800">
+                        {value.doi || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">ISSN</p>
+                      <p className="font-medium text-gray-800">
+                        {value.issn || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Year Of Publication
+                      </p>
+                      <p className="font-medium text-gray-800">
+                        {value.yearOfPublication || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">Authors</p>
+                      <p className="font-medium text-gray-800">
+                        {value.authors || "N/A"}
+                      </p>
+                    </div>
+                  ))}
+
+                {/* National Conferences (NC, National Conference) */}
+                {conferenceAndJournal
+                  .filter((item) =>
+                    ["NC", "National Conference"].includes(
+                      item.typeOfPublication
+                    )
+                  )
+                  .map((value, index) => (
+                    <div
+                      key={`national-conference-${index}`}
+                      className="space-y-1"
+                    >
+                      <p className="text-lg font-semibold text-orange-600">
+                        National Conference {index + 1}
+                      </p>
+                      <p className="text-sm text-gray-500">Title</p>
+                      <p className="font-medium text-gray-800">
+                        {value.title || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">Venue</p>
+                      <p className="font-medium text-gray-800">
+                        {value.venue || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Year Of Publication
+                      </p>
+                      <p className="font-medium text-gray-800">
+                        {value.yearOfPublication || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">Authors</p>
+                      <p className="font-medium text-gray-800">
+                        {value.authors || "N/A"}
+                      </p>
+                    </div>
+                  ))}
+
+                {/* International Conferences (IC, International Conference) */}
+                {conferenceAndJournal
+                  .filter((item) =>
+                    ["IC", "International Conference"].includes(
+                      item.typeOfPublication
+                    )
+                  )
+                  .map((value, index) => (
+                    <div
+                      key={`international-conference-${index}`}
+                      className="space-y-1"
+                    >
+                      <p className="text-lg font-semibold text-red-600">
+                        International Conference {index + 1}
+                      </p>
+                      <p className="text-sm text-gray-500">Title</p>
+                      <p className="font-medium text-gray-800">
+                        {value.title || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">Venue</p>
+                      <p className="font-medium text-gray-800">
+                        {value.venue || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Year Of Publication
+                      </p>
+                      <p className="font-medium text-gray-800">
+                        {value.yearOfPublication || "N/A"}
+                      </p>
+                      <p className="text-sm text-gray-500">Authors</p>
+                      <p className="font-medium text-gray-800">
+                        {value.authors || "N/A"}
+                      </p>
+                    </div>
+                  ))}
+              </>
             ) : (
               <p className="text-gray-500">
                 No conference and journal data available.
@@ -1173,11 +1255,11 @@ export default function FacultyDetailsPage() {
                   </p>
                   <p className="text-sm text-gray-500">From Date</p>
                   <p className="font-medium text-gray-800">
-                    {event.fromDate || "N/A"}
+                    {event.fromDate?.split("T")[0] || "N/A"}
                   </p>
                   <p className="text-sm text-gray-500">To Date</p>
                   <p className="font-medium text-gray-800">
-                    {event.toDate || "N/A"}
+                    {event.toDate?.split("T")[0] || "N/A"}
                   </p>
                 </div>
               ))
@@ -1228,11 +1310,11 @@ export default function FacultyDetailsPage() {
                   </p>
                   <p className="text-sm text-gray-500">From Date</p>
                   <p className="font-medium text-gray-800">
-                    {event.fromDate || "N/A"}
+                    {event.fromDate?.split("T")[0] || "N/A"}
                   </p>
                   <p className="text-sm text-gray-500">To Date</p>
                   <p className="font-medium text-gray-800">
-                    {event.toDate || "N/A"}
+                    {event.toDate?.split("T")[0] || "N/A"}
                   </p>
                 </div>
               ))
@@ -1351,7 +1433,7 @@ export default function FacultyDetailsPage() {
                   </p>
                   <p className="text-sm text-gray-500">Membership Since</p>
                   <p className="font-medium text-gray-800">
-                    {membership.membershipSince || "N/A"}
+                    {membership.membershipSince?.split("T")[0] || "N/A"}
                   </p>
                   <p className="text-sm text-gray-500">Membership Type</p>
                   <p className="font-medium text-gray-800">

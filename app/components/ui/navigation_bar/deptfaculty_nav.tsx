@@ -261,7 +261,6 @@ const HorizontalNavbar: React.FC = () => {
                 href="/mis_faculty/profile"
                 className="flex items-center space-x-2 cursor-pointer hover:bg-blue-500 py-2 px-2 rounded"
               >
-                <FaHome className="text-sm" />
                 <span className="text-sm">Profile</span>
               </Link>
             </li>
