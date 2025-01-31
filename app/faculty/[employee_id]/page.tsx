@@ -325,7 +325,7 @@ export default function FacultyDetailsPage() {
         setFacultyDetails(data.personalDetails);
         setResearchDetails(data.researchDetails);
         setEducationDetails(data.educationDetails);
-        console.log(data.consultancyDetails);
+        console.log(data.educationDetails);
         setConsultancyDetails(data.consultancyDetails);
         setConferenceAndJournal(data.conferenceAndJournal);
         console.log(data.conferenceAndJournal);
@@ -507,6 +507,12 @@ export default function FacultyDetailsPage() {
               </p>
             </div>
             <div className="space-y-1">
+              <p className="text-sm text-gray-500">Contact No</p>
+              <p className="font-medium text-gray-800">
+                {facultyDetails.contactNo || "N/A"}
+              </p>
+            </div>
+            <div className="space-y-1">
               <p className="text-sm text-gray-500">Alternate Contact No</p>
               <p className="font-medium text-gray-800">
                 {facultyDetails.alternateContactNo || "N/A"}
@@ -629,7 +635,7 @@ export default function FacultyDetailsPage() {
           {/* Bank details */}
           <div className="mt-8 pt-8 border-t border-gray-200">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Bank Details
+              Bank And Other Account Details
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1">
@@ -732,48 +738,45 @@ export default function FacultyDetailsPage() {
             Education Details
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Program</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.Program || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Registration Number</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.regNo || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">School/College</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.schoolCollege || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Specialization</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.specialization || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Medium of Instruction</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.mediumOfInstruction || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Pass Class</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.passClass || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Year of Award</p>
-              <p className="font-medium text-gray-800">
-                {educationDetails?.yearOfAward || "N/A"}
-              </p>
-            </div>
+            {educationDetails ? (
+              Object.entries(educationDetails).map(([key, value], index) => (
+                <div key={index} className="space-y-1">
+                  {/* <p className="text-sm text-black font-weight:500">
+                    Education {index + 1}
+                  </p> */}
+                  <p className="text-sm text-gray-500">Program</p>
+                  <p className="font-medium text-gray-800">
+                    {value.Program || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Registration Number</p>
+                  <p className="font-medium text-gray-800">
+                    {value.regNo || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">School/College</p>
+                  <p className="font-medium text-gray-800">
+                    {value.schoolCollege || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Specialization</p>
+                  <p className="font-medium text-gray-800">
+                    {value.specialization || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Medium of Instruction</p>
+                  <p className="font-medium text-gray-800">
+                    {value.mediumOfInstruction || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Pass Class</p>
+                  <p className="font-medium text-gray-800">
+                    {value.passClass || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Year of Award</p>
+                  <p className="font-medium text-gray-800">
+                    {value.yearOfAward || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No education data available.</p>
+            )}
           </div>
         </div>
 
@@ -786,30 +789,35 @@ export default function FacultyDetailsPage() {
             Additional Responsibility
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Level</p>
-              <p className="font-medium text-gray-800">
-                {addtionalResponsibility?.level || "N/A"}
+            {addtionalResponsibility && addtionalResponsibility.length > 0 ? (
+              addtionalResponsibility.map((responsibility, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-sm text-black font-weight:500">
+                    Responsibility {index + 1}
+                  </p>
+                  <p className="text-sm text-gray-500">Level</p>
+                  <p className="font-medium text-gray-800">
+                    {responsibility.level || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">Responsibility</p>
+                  <p className="font-medium text-gray-800">
+                    {responsibility.responsibility || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">From Date</p>
+                  <p className="font-medium text-gray-800">
+                    {responsibility.fromDate?.split("T")[0] || "N/A"}
+                  </p>
+                  <p className="text-sm text-gray-500">To Date</p>
+                  <p className="font-medium text-gray-800">
+                    {responsibility.toDate?.split("T")[0] || "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">
+                No additional responsibility data available.
               </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Responsibility</p>
-              <p className="font-medium text-gray-800">
-                {addtionalResponsibility?.responsibility || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">From Date</p>
-              <p className="font-medium text-gray-800">
-                {addtionalResponsibility?.fromDate?.split("T")[0] || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">To Date</p>
-              <p className="font-medium text-gray-800">
-                {addtionalResponsibility?.toDate?.split("T")[0] || "N/A"}
-              </p>
-            </div>
+            )}
           </div>
         </div>
 
@@ -922,21 +930,9 @@ export default function FacultyDetailsPage() {
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-500">Name</p>
-              <p className="font-medium text-gray-800">
-                {bookPublication?.name || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Volume</p>
+              <p className="text-sm text-gray-500">Edition</p>
               <p className="font-medium text-gray-800">
                 {bookPublication?.volume || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Page</p>
-              <p className="font-medium text-gray-800">
-                {bookPublication?.pageNumber || "N/A"}
               </p>
             </div>
             <div className="space-y-1">
@@ -952,13 +948,7 @@ export default function FacultyDetailsPage() {
               </p>
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-500">Title</p>
-              <p className="font-medium text-gray-800">
-                {bookPublication?.title || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Type of Publication</p>
+              <p className="text-sm text-gray-500">Title of Book</p>
               <p className="font-medium text-gray-800">
                 {bookPublication?.title || "N/A"}
               </p>
@@ -967,12 +957,6 @@ export default function FacultyDetailsPage() {
               <p className="text-sm text-gray-500">Area</p>
               <p className="font-medium text-gray-800">
                 {bookPublication?.area || "N/A"}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">Impact Factor</p>
-              <p className="font-medium text-gray-800">
-                {bookPublication?.impactFactor || "N/A"}
               </p>
             </div>
             <div className="space-y-1">

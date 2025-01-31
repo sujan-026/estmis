@@ -486,13 +486,13 @@ export default async function handler(req, res) {
     const response = {
       personalDetails: personalDetailsResult.recordset[0],
       researchDetails: researchDetailsResult.recordset[0],
-      educationDetails: educationDetailsResult.recordset[0],
+      educationDetails: educationDetailsResult.recordset || null,
       consultancyDetails: consultancyDetailsResult.recordset || null,
       conferenceAndJournal: conferenceAndJournalResult.recordset || null,
       bookPublication: bookPublicationResult.recordset[0] || null,
       awardAndRecognition: awardAndRecognitionResult.recordset || null,
       addtionalResponsibility:
-        addtionalResponsibilityResult.recordset[0] || null,
+        addtionalResponsibilityResult.recordset || null,
       eventAttended: eventAttendedResult.recordset || null,
       eventOrganized: eventOrganizedResult.recordset || null,
       industryExperience: industryExperienceResult.recordset || [],
