@@ -91,6 +91,7 @@ const languagesOptions = [
 ];
 
 export default function Form() {
+  const [branch, setBranch] = useState<Branch[]>([]);
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [facultyId, setFacultyId] = useState("");
@@ -117,7 +118,22 @@ export default function Form() {
     "Associate Professor",
     "Lecturer",
   ];
-
+ // Fetch Branch
+ useEffect(() => {
+  async function fetchBranch() {
+    try {
+      const response = await fetch("/api/fetchBranch");
+      if (!response.ok) throw new Error("Failed to fetch branch.");
+      const data = await response.json();
+      console.log(data);
+      setBranch(data);
+    } catch (error) {
+      console.error("Error fetching branch:", error);
+     // setErrorMessage("Failed to load branch.");
+    }
+  }
+  fetchBranch();
+}, []);
   const aidedOptions = ["Yes", "No"];
   // Extract facultyId from URL using query string
   useEffect(() => {
@@ -445,11 +461,11 @@ export default function Form() {
                     className="mt-1 block w-full p-1 py-2.5 rounded-md border bg-gray-50 border-gray-300 shadow-sm"
                   >
                     <option value="">Select Department</option>
-                    {departments.map((dept) => (
-                      <option key={dept.code} value={dept.code}>
-                        {dept.title}
-                      </option>
-                    ))}
+              {branch.map((br) => (
+                <option key={br.brcode} value={br.brcode}>
+                  {br.brcode_title}
+                </option>
+              ))}
                   </select>
                   {errors.personalSchema?.department && (
                     <p className="mt-2 text-sm text-red-600">

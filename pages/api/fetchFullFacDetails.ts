@@ -346,6 +346,31 @@ export default async function handler(req, res) {
       WHERE [employee_id] = @employee_id
     `;
 
+    const researchExpQuery = `
+      SELECT TOP (1000)
+        [employee_id],
+        [areaofresearch]
+      ,[from_date]
+      ,[to_date]
+      FROM [aittest].[dbo].[research_experience]
+      WHERE [employee_id] = @employee_id
+    `;
+
+    const researchSupervisionQuery = `
+      SELECT TOP (1000)
+      [employee_id]
+      ,[Research_Supervisor]
+      ,[Research_Scholar_Name]
+      ,[USN]
+      ,[University]
+      ,[Institute]
+      ,[Discipline]
+      ,[Title_Research]
+      ,[Status]
+      FROM [aittest].[dbo].[research_supervision]
+      WHERE [employee_id] = @employee_id
+    `;
+
 
     const personalDetailsResult = await pool
       .request()
@@ -427,6 +452,16 @@ export default async function handler(req, res) {
       .input("employee_id", sql.NVarChar, employee_id)
       .query(researchProjectsQuery);
 
+    const researchExpResult = await pool
+      .request()
+      .input("employee_id", sql.NVarChar, employee_id)
+      .query(researchExpQuery);
+
+    const researchSupervisionResult = await pool
+      .request()
+      .input("employee_id", sql.NVarChar, employee_id)
+      .query(researchSupervisionQuery);
+
 
     if (
       personalDetailsResult.recordset.length === 0 &&
@@ -441,7 +476,9 @@ export default async function handler(req, res) {
       patentResult.recordset.length === 0 &&
       professionalMembersResult.recordset.length === 0 &&
       teachingExperienceResult.recordset.length === 0 &&
-      researchProjectsResult.recordset.length === 0
+      researchProjectsResult.recordset.length === 0 &&
+      researchExpResult.recordset.length === 0 &&
+      researchSupervisionResult.recordset.length === 0
     ) {
       return res.status(404).json({ error: "Faculty not found" });
     }
@@ -449,21 +486,23 @@ export default async function handler(req, res) {
     const response = {
       personalDetails: personalDetailsResult.recordset[0],
       researchDetails: researchDetailsResult.recordset[0],
-      educationDetails: educationDetailsResult.recordset[0],
-      consultancyDetails: consultancyDetailsResult.recordset[0],
-      conferenceAndJournal: conferenceAndJournalResult.recordset[0],
+      educationDetails: educationDetailsResult.recordset || null,
+      consultancyDetails: consultancyDetailsResult.recordset || null,
+      conferenceAndJournal: conferenceAndJournalResult.recordset || null,
       bookPublication: bookPublicationResult.recordset[0] || null,
-      awardAndRecognition: awardAndRecognitionResult.recordset[0] || null,
+      awardAndRecognition: awardAndRecognitionResult.recordset || null,
       addtionalResponsibility:
-        addtionalResponsibilityResult.recordset[0] || null,
-      eventAttended: eventAttendedResult.recordset[0] || null,
-      eventOrganized: eventOrganizedResult.recordset[0] || null,
-            industryExperience: industryExperienceResult.recordset || [],
-            outreachActivity: outreachActivityResult.recordset || [],
+        addtionalResponsibilityResult.recordset || null,
+      eventAttended: eventAttendedResult.recordset || null,
+      eventOrganized: eventOrganizedResult.recordset || null,
+      industryExperience: industryExperienceResult.recordset || [],
+      outreachActivity: outreachActivityResult.recordset || [],
       patent: patentResult.recordset || [],
       professionalMembers: professionalMembersResult.recordset || [],
       teachingExperience: teachingExperienceResult.recordset || [],
-       researchProjects: researchProjectsResult.recordset || [],
+      researchProjects: researchProjectsResult.recordset || [],
+      researchExp: researchExpResult.recordset || [],
+      researchSuperVision: researchSupervisionResult.recordset || [],
     };
     return res.status(200).json(response);
   } catch (error) {
