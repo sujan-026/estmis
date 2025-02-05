@@ -45,7 +45,11 @@ const LoginPage = () => {
 
         // Redirect based on the login type and role
         if (loginType === "Faculty") {
-          if (data.role === "faculty") {
+          if (
+            data.role === "faculty" ||
+            data.role === "dean-academic" ||
+            data.role === "deanp"
+          ) {
             router.push("/mis_faculty/faculty_home");
           } else if (data.role === "hod") {
             router.push("/mis_hod/hod_home");

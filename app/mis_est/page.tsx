@@ -35,6 +35,11 @@ export default function Home() {
     ml_faculty: 0,
     ph_faculty: 0,
     te_faculty: 0,
+    hss_faculty: 0,
+    chem_faculty: 0,
+    phy_faculty: 0,
+    math_faculty: 0,
+    non_teaching: 0,
     boys_emp: 0,
     girls_emp: 0,
   });
@@ -63,10 +68,15 @@ export default function Home() {
               ma_faculty: studentData.MA,
               mba_faculty: studentData.MBA,
               mca_faculty: studentData.MCA,
+              chem_faculty: studentData.CH,
+              phy_faculty: studentData.PH,
+              math_faculty: studentData.MA,
               me_faculty: studentData.ME,
               ml_faculty: studentData.ML,
               ph_faculty: studentData.PH,
               te_faculty: studentData.TE,
+              hss_faculty: studentData.HSS,
+              non_teaching: studentData.NTS,
               boys_emp: studentData.boy_emp,
               girls_emp: studentData.girl_emp,
             });
@@ -206,6 +216,36 @@ export default function Home() {
             <h2 className="text-lg font-bold">Total TE faculty</h2>
             <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
               {studentCounts.te_faculty}
+            </p>
+          </div>
+          <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
+            <h2 className="text-lg font-bold">Total HSS faculty</h2>
+            <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
+              {studentCounts.hss_faculty}
+            </p>
+          </div>
+          <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
+            <h2 className="text-lg font-bold">Total Non Teaching Staff</h2>
+            <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
+              {studentCounts.non_teaching}
+            </p>
+          </div>
+          <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
+            <h2 className="text-lg font-bold">Total Math Faculty</h2>
+            <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
+              {studentCounts.math_faculty}
+            </p>
+          </div>
+          <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
+            <h2 className="text-lg font-bold">Total Chem Faculty</h2>
+            <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
+              {studentCounts.chem_faculty}
+            </p>
+          </div>
+          <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
+            <h2 className="text-lg font-bold">Total Phy Faculty</h2>
+            <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
+              {studentCounts.phy_faculty}``
             </p>
           </div>
         </div>
