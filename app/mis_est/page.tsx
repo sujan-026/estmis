@@ -231,12 +231,6 @@ export default function Home() {
             </p>
           </div>
           <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
-            <h2 className="text-lg font-bold">Total Math Faculty</h2>
-            <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
-              {studentCounts.math_faculty}
-            </p>
-          </div>
-          <div className="bg-blue-100 p-6 shadow-2xl rounded-lg flex flex-col items-center">
             <h2 className="text-lg font-bold">Total Chem Faculty</h2>
             <p className="mt-4 flex items-center justify-center bg-transparent border-blue-700 border-4 rounded-full w-20 h-20 text-2xl font-bold text-pink-700">
               {studentCounts.chem_faculty}
