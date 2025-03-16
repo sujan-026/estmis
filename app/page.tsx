@@ -42,6 +42,7 @@ const LoginPage = () => {
           department: data.department,
           emp_id: userId,
         });
+        sessionStorage.setItem("emp_id", userId);
 
         // Redirect based on the login type and role
         if (loginType === "Faculty") {

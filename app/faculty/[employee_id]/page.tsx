@@ -387,6 +387,37 @@ export default function FacultyDetailsPage() {
   // const customLoader = ({ src, width, quality }: { src: string; width: number; quality?: number }) => {
   //   return `http://192.168.29.12/Employee_photos/${src}`;
   // };
+// Add these utility functions at the top
+// Add these utility functions INSIDE your component, before the return statement
+const getCurrentYear = () => new Date().getFullYear();
+
+const getLatestYear = (entries: any[], dateField?: string): string | null => {
+  if (!entries || entries.length === 0 || !dateField) return null;
+  
+  const dates = entries
+    .map(entry => {
+      const dateValue = entry[dateField];
+      if (!dateValue) return null;
+      if (/^\d{4}$/.test(dateValue)) return parseInt(dateValue);
+      const date = new Date(dateValue);
+      return date.getFullYear();
+    })
+    .filter(year => year !== null);
+
+  return dates.length > 0 ? Math.max(...dates).toString() : null;
+};
+
+const getThisYearCount = (entries: any[], dateField?: string): number => {
+  if (!entries || !dateField) return 0;
+  const currentYear = getCurrentYear();
+  
+  return entries.filter(entry => {
+    const dateValue = entry[dateField];
+    if (!dateValue) return false;
+    const year = dateValue.length === 4 ? parseInt(dateValue) : new Date(dateValue).getFullYear();
+    return year === currentYear;
+  }).length;
+};
 
   return (
     <div>
@@ -484,7 +515,205 @@ export default function FacultyDetailsPage() {
             </div>
           </div>
         </div>
+<div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+  {/* Book Publications Card */}
+  <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{bookPublication?.length ?? 0}</h3>
+    <p className="text-sm">
+      Book Publications
+      {bookPublication?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(bookPublication, 'yearOfPublish')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(bookPublication, 'yearOfPublish')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
 
+  {/* Conference & Journals Card */}
+  <div className="bg-blue-600 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{conferenceAndJournal?.length ?? 0}</h3>
+    <p className="text-sm">
+      Conferences & Journals
+      {conferenceAndJournal?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(conferenceAndJournal, 'yearOfPublication')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(conferenceAndJournal, 'yearOfPublication')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Awards & Recognition Card */}
+  <div className="bg-blue-700 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{awardAndRecognition?.length ?? 0}</h3>
+    <p className="text-sm">
+      Awards & Recognition
+      {awardAndRecognition?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(awardAndRecognition, 'awardDate')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(awardAndRecognition, 'awardDate')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Events Card */}
+  <div className="bg-blue-800 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">
+      {(eventAttended?.length ?? 0) + (eventOrganized?.length ?? 0)}
+    </h3>
+    <p className="text-sm">
+      Total Events
+      {(eventAttended?.length > 0 || eventOrganized?.length > 0) && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {Math.max(
+              getLatestYear(eventAttended, 'toDate') || 0,
+              getLatestYear(eventOrganized, 'toDate') || 0
+            )}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(eventAttended, 'toDate') + getThisYearCount(eventOrganized, 'toDate')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Outreach Activities Card */}
+  <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{outreachActivity?.length ?? 0}</h3>
+    <p className="text-sm">
+      Outreach Activities
+      {outreachActivity?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(outreachActivity, 'toDate')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(outreachActivity, 'toDate')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Patents Card */}
+  <div className="bg-blue-600 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{patent?.length ?? 0}</h3>
+    <p className="text-sm">
+      Patents
+      {patent?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(patent, 'grantedYear')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(patent, 'grantedYear')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Professional Memberships Card */}
+  <div className="bg-blue-700 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{professionalMembers?.length ?? 0}</h3>
+    <p className="text-sm">
+      Professional Memberships
+      {professionalMembers?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(professionalMembers, 'membershipSince')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(professionalMembers, 'membershipSince')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Teaching Experience Card */}
+  <div className="bg-blue-800 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{teachingExperience?.length ?? 0}</h3>
+    <p className="text-sm">
+      Teaching Experience
+      {teachingExperience?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(teachingExperience, 'toDate')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(teachingExperience, 'toDate')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Research Projects Card */}
+  <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{researchProjects?.length ?? 0}</h3>
+    <p className="text-sm">
+      Research Projects
+      {researchProjects?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(researchProjects, 'dOfSanction')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(researchProjects, 'dOfSanction')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Research Experience Card */}
+  <div className="bg-blue-600 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{researchExp?.length ?? 0}</h3>
+    <p className="text-sm">
+      Research Experience
+      {researchExp?.length > 0 && (
+        <>
+          <span className="block text-xs mt-1 text-blue-200">
+            Latest: {getLatestYear(researchExp, 'to_date')}
+          </span>
+          <span className="block text-xs text-blue-200">
+            This Year: {getThisYearCount(researchExp, 'to_date')}
+          </span>
+        </>
+      )}
+    </p>
+  </div>
+
+  {/* Research Supervision Card */}
+  <div className="bg-blue-700 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <h3 className="text-2xl font-bold mb-1">{researchSupervision?.length ?? 0}</h3>
+    <p className="text-sm">
+      Research Supervision
+      {researchSupervision?.length > 0 && (
+        <span className="block text-xs mt-1 text-blue-200">
+          {researchSupervision.length} ongoing
+        </span>
+      )}
+    </p>
+  </div>
+</div>
         {/* Personal Details */}
         <div
           className="mt-8 pt-8 border-t border-gray-200"
