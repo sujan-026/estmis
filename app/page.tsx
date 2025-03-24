@@ -58,7 +58,7 @@ const LoginPage = () => {
             router.push("/mis_admission/adm_home");
           } else if (data.role === "accounts" || data.role === "acc_admin") {
             router.push("/mis_accounts/accounts_home");
-          } else if (data.role === "est") {
+          } else if (data.role === "est_admin" || data.role === "est") {
             router.push("/mis_est");
           } else if (data.role === "principal" || data.role === "Principal") {
             router.push("/mis_principal");
