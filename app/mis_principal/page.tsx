@@ -2,7 +2,6 @@
 
 import React from "react";
 import Layout from '../../app/components/ui/Layout';
-import { get } from "lodash";
 import HorizontalNavbar from "../components/ui/navigation_bar/principal_nav";
 
 const Home = () => {
