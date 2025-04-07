@@ -258,11 +258,11 @@ const processData = (entries: any[], dateField?: string) => {
   return yearCounts;
 };
 const Home = () => {
-  const params = useParams();
   const router = useRouter();
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  
   // Get employee ID from sessionStorage (only available on client side)
-  const employeeId = sessionStorage.getItem("emp_id");
+  const [employeeId, setEmployeeId] = useState<string | null>(null);
+  
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Data state variables
@@ -285,6 +285,13 @@ const Home = () => {
   const [researchExp, setResearchExp] = useState<ResearchExpDetails[]>([]);
   const [researchSupervision, setResearchSupervision] = useState<ResearchSupervision[]>([]);
 
+  useEffect(() => {
+    const empId = sessionStorage.getItem("emp_id");
+    if (empId) {
+      setEmployeeId(empId);
+    }
+  }, []);
+
   // Fetch data once employeeId is available
   useEffect(() => {
     async function fetchFacultyDetails() {
@@ -299,6 +306,14 @@ const Home = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
+          // If faculty not found, redirect to registration
+          if (
+            response.status === 404 ||
+            errorData.error?.toLowerCase().includes("not found")
+          ) {
+            router.push(`/faculty`); // ✅ your custom register route
+            return;
+          }
           throw new Error(
             errorData.error || "Failed to fetch faculty details."
           );

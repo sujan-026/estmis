@@ -62,7 +62,10 @@ const LoginPage = () => {
             router.push("/mis_est");
           } else if (data.role === "principal" || data.role === "Principal") {
             router.push("/mis_principal");
-          } else if (data.role === "non-teaching staff") {
+          } else if (
+            data.role === "non-teaching staff" ||
+            data.role === "Non-Teaching Staff"
+          ) {
             router.push("/mis_non_teaching_staff");
           }
         } else if (loginType === "Student") {

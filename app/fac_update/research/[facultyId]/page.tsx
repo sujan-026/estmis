@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
+
 const FacultyDetailsPage = () => {
   const [data, setData] = useState<any>(null); // Contains data for all tables
   const [loading, setLoading] = useState(true);
@@ -14,14 +15,21 @@ const FacultyDetailsPage = () => {
     const idFromPath = segments[segments.length - 1]; // Get the last segment (facultyId)
     console.log(idFromPath);
     if (idFromPath) {
-        setEmployeeId(idFromPath);
+      setEmployeeId(idFromPath);
     } else {
       console.warn("Faculty ID is not present in the dynamic route.");
     }
   }, []);
   const defaultSchemas = {
     facultyResearchDetails: [
-      { employee_id: employeeId, orcidId: "", googleScholarId: "", scopusId: "", publonsId: "", researchId: "" },
+      {
+        employee_id: employeeId,
+        orcidId: "",
+        googleScholarId: "",
+        scopusId: "",
+        publonsId: "",
+        researchId: "",
+      },
     ],
     ConferenceAndJournal: [
       {
@@ -44,7 +52,17 @@ const FacultyDetailsPage = () => {
       },
     ],
     ResearchProjects: [
-      { employee_id: employeeId, projectTitle: "", pi: "", coPi: "", dOfSanction: "", duration: "", fundingAgency: "", amount: "", status: "" },
+      {
+        employee_id: employeeId,
+        projectTitle: "",
+        pi: "",
+        coPi: "",
+        dOfSanction: "",
+        duration: "",
+        fundingAgency: "",
+        amount: "",
+        status: "",
+      },
     ],
     ResearchSupervision: [
       {
@@ -60,29 +78,92 @@ const FacultyDetailsPage = () => {
       },
     ],
     ResearchExperience: [
-      { employee_id: employeeId, areaofresearch: "", from_date: "", to_date: "" },
+      {
+        employee_id: employeeId,
+        areaofresearch: "",
+        from_date: "",
+        to_date: "",
+      },
     ],
     Consultancy: [
-      { employee_id: employeeId, sanctionedDate: "", projectPeriod: "", amount: "", principalInvestigator: "", coPrincipalInvestigator: "", status: "" },
+      {
+        employee_id: employeeId,
+        sanctionedDate: "",
+        projectPeriod: "",
+        amount: "",
+        principalInvestigator: "",
+        coPrincipalInvestigator: "",
+        status: "",
+      },
     ],
     Patent: [
-      { employee_id: employeeId, areaOfResearch: "", grantedYear: "", patentNo: "", patentStatus: "", author: "" },
+      {
+        employee_id: employeeId,
+        areaOfResearch: "",
+        grantedYear: "",
+        patentNo: "",
+        patentStatus: "",
+        author: "",
+      },
     ],
     BookPublication: [
-      { employee_id: employeeId, publicationType: "", name: "", volume: "", pageNumber: "", issn: "", publisher: "", title: "", area: "", impactFactor: "", yearOfPublish: "", authors: "" },
+      {
+        employee_id: employeeId,
+        publicationType: "",
+        name: "",
+        volume: "",
+        pageNumber: "",
+        issn: "",
+        publisher: "",
+        title: "",
+        area: "",
+        impactFactor: "",
+        yearOfPublish: "",
+        authors: "",
+      },
     ],
     EventAttended: [
-      { employee_id: employeeId, fromDate: "", toDate: "", organizer: "", venue: "", sponsor: "", targetAudience: "", nameofevent: "", typeofevent: "" },
+      {
+        employee_id: employeeId,
+        fromDate: "",
+        toDate: "",
+        organizer: "",
+        venue: "",
+        sponsor: "",
+        targetAudience: "",
+        nameofevent: "",
+        typeofevent: "",
+      },
     ],
     EventOrganized: [
-      { employee_id: employeeId, typeofevent: "", nameofevent: "", fromDate: "", toDate: "", organizer: "", venue: "", sponsor: "", targetAudience: "" },
+      {
+        employee_id: employeeId,
+        typeofevent: "",
+        nameofevent: "",
+        fromDate: "",
+        toDate: "",
+        organizer: "",
+        venue: "",
+        sponsor: "",
+        targetAudience: "",
+      },
     ],
     ProfessionalMembers: [
-      { employee_id: employeeId, professionalBody: "", membershipId: "", membershipSince: "", membershipType: "" },
+      {
+        employee_id: employeeId,
+        professionalBody: "",
+        membershipId: "",
+        membershipSince: "",
+        membershipType: "",
+      },
     ],
   };
 
   useEffect(() => {
+    if (!employeeId) return; // Prevent API call if employeeId isn't ready
+
+    setLoading(true); // Reset loading on every fetch
+
     fetch(`/api/fac_update_research?employee_id=${employeeId}`)
       .then((res) => res.json())
       .then((data) => {
@@ -99,7 +180,12 @@ const FacultyDetailsPage = () => {
       });
   }, [employeeId]);
 
-  const handleChange = (table: string, index: number, field: string, value: any) => {
+  const handleChange = (
+    table: string,
+    index: number,
+    field: string,
+    value: any
+  ) => {
     setData((prev: any) => ({
       ...prev,
       [table]: prev[table].map((row: any, i: number) =>
@@ -157,7 +243,9 @@ const FacultyDetailsPage = () => {
       },
       body: JSON.stringify({
         facultyId: employeeId,
-        researchDetails: data.FacultyResearchDetails ? data.FacultyResearchDetails[0] : null,
+        researchDetails: data.FacultyResearchDetails
+          ? data.FacultyResearchDetails[0]
+          : null,
         conferenceJournals: data.ConferenceAndJournal || [],
         researchProjects: data.ResearchProjects || [],
         researchSupervision: data.ResearchSupervision || [],
@@ -188,12 +276,16 @@ const FacultyDetailsPage = () => {
 
   const renderTable = (table: string, rows: any[]) => {
     const headers = rows.length
-      ? Object.keys(rows[0]).filter((key) => key !== "id" && key !== "employee_id")
+      ? Object.keys(rows[0]).filter(
+          (key) => key !== "id" && key !== "employee_id"
+        )
       : [];
 
     return (
       <div key={table} className="mb-6">
-        <h2 className="text-2xl font-bold my-4">{table.replace(/([A-Z])/g, " $1")}</h2>
+        <h2 className="text-2xl font-bold my-4">
+          {table.replace(/([A-Z])/g, " $1")}
+        </h2>
         <table
           className="table-auto border-collapse border border-gray-300 w-full text-left"
           style={{ tableLayout: "auto", width: "100%" }}
@@ -215,57 +307,72 @@ const FacultyDetailsPage = () => {
           <tbody>
             {rows.map((row, index) => (
               <tr key={index}>
-                { headers.map((header) => (
+                {headers.map((header) => (
                   <td
                     key={header}
                     className="border border-gray-300 px-4 py-2"
                     style={{ minWidth: "150px", whiteSpace: "nowrap" }}
                   >
                     {header === "status" ? (
-      <select
-        value={row[header] || ""}
-        onChange={(e) => handleChange(table, index, header, e.target.value)}
-        className="w-full border border-gray-300 p-2 rounded"
-      >
-        <option value="">Select Status</option>
-        <option value="Ongoing">Ongoing</option>
-        <option value="Completed">Completed</option>
-      </select>
-    ) :header === "Status" ? (
-      <select
-        value={row[header] || ""}
-        onChange={(e) => handleChange(table, index, header, e.target.value)}
-        className="w-full border border-gray-300 p-2 rounded"
-      >
-        <option value="">Select Status</option>
-        <option value="Ongoing">Ongoing</option>
-        <option value="Completed">Completed</option>
-      </select>
-    ) : header === "from_date" && table === "ResearchExperience" ? (
-                    <input
-                      type="date"
-                      value={row[header]?.split("T")[0] || ""}
-                      onChange={(e) => handleChange(table, index, header, e.target.value)}
-                      className="w-full border border-gray-300 p-2 rounded"
-                    />
-                  ) : header === "to_date" && table === "ResearchExperience" ? (
-                    <input
-                      type="date"
-                      value={row[header]?.split("T")[0] || ""}
-                      onChange={(e) => handleChange(table, index, header, e.target.value)}
-                      className="w-full border border-gray-300 p-2 rounded"
-                    />
-                  ) : header.toLowerCase().includes("date") ? (
-                    <input
-                      type="date"
-                      value={row[header]?.split("T")[0] || ""}
-                      onChange={(e) => handleChange(table, index, header, e.target.value)}
-                      className="w-full border border-gray-300 p-2 rounded"
-                    />
-                  ) :header === "typeOfPublication" && table === "ConferenceAndJournal" ? (
                       <select
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
+                        className="w-full border border-gray-300 p-2 rounded"
+                      >
+                        <option value="">Select Status</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    ) : header === "Status" ? (
+                      <select
+                        value={row[header] || ""}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
+                        className="w-full border border-gray-300 p-2 rounded"
+                      >
+                        <option value="">Select Status</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    ) : header === "from_date" &&
+                      table === "ResearchExperience" ? (
+                      <input
+                        type="date"
+                        value={row[header]?.split("T")[0] || ""}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
+                        className="w-full border border-gray-300 p-2 rounded"
+                      />
+                    ) : header === "to_date" &&
+                      table === "ResearchExperience" ? (
+                      <input
+                        type="date"
+                        value={row[header]?.split("T")[0] || ""}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
+                        className="w-full border border-gray-300 p-2 rounded"
+                      />
+                    ) : header.toLowerCase().includes("date") ? (
+                      <input
+                        type="date"
+                        value={row[header]?.split("T")[0] || ""}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
+                        className="w-full border border-gray-300 p-2 rounded"
+                      />
+                    ) : header === "typeOfPublication" &&
+                      table === "ConferenceAndJournal" ? (
+                      <select
+                        value={row[header] || ""}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       >
                         <option value="">Select Type</option>
@@ -274,10 +381,13 @@ const FacultyDetailsPage = () => {
                         <option value="NJ">National Journal</option>
                         <option value="IJ">International Journal</option>
                       </select>
-                    ) : header === "publishedUnder" && table === "ConferenceAndJournal" ? (
+                    ) : header === "publishedUnder" &&
+                      table === "ConferenceAndJournal" ? (
                       <select
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       >
                         <option value="">Select Published Under</option>
@@ -290,49 +400,65 @@ const FacultyDetailsPage = () => {
                     ) : header === "Status" ? (
                       <select
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       >
                         <option value="">Select Status</option>
                         <option value="Ongoing">Ongoing</option>
                         <option value="Completed">Completed</option>
                       </select>
-                    ) : header === "membershipType" && table === "ProfessionalMembers" ? (
+                    ) : header === "membershipType" &&
+                      table === "ProfessionalMembers" ? (
                       <select
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       >
                         <option value="">Select Membership Type</option>
                         <option value="Annual">Annual</option>
                         <option value="Permanent">Permanent</option>
                       </select>
-                    ) : header === "membershipSince" && table === "ProfessionalMembers" ? (
+                    ) : header === "membershipSince" &&
+                      table === "ProfessionalMembers" ? (
                       <input
                         type="date"
                         value={row[header]?.split("T")[0] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       />
-                    ) : header === "yearOfPublication" && table === "ConferenceAndJournal" ? (
+                    ) : header === "yearOfPublication" &&
+                      table === "ConferenceAndJournal" ? (
                       <input
                         type="number"
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       />
-                    ) : header === "amount" && ["ResearchProjects", "Consultancy"].includes(table) ? (
+                    ) : header === "amount" &&
+                      ["ResearchProjects", "Consultancy"].includes(table) ? (
                       <input
                         type="number"
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       />
                     ) : (
                       <input
                         type="text"
                         value={row[header] || ""}
-                        onChange={(e) => handleChange(table, index, header, e.target.value)}
+                        onChange={(e) =>
+                          handleChange(table, index, header, e.target.value)
+                        }
                         className="w-full border border-gray-300 p-2 rounded"
                       />
                     )}
@@ -351,13 +477,13 @@ const FacultyDetailsPage = () => {
           </tbody>
         </table>
         {table !== "facultyResearchDetails" && (
-  <button
-    onClick={() => addNewRow(table)}
-    className="bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700 mt-4"
-  >
-    Add New Row
-  </button>
-)}
+          <button
+            onClick={() => addNewRow(table)}
+            className="bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700 mt-4"
+          >
+            Add New Row
+          </button>
+        )}
       </div>
     );
   };
@@ -391,7 +517,9 @@ const FacultyDetailsPage = () => {
           Research Details
         </a>
       </nav>
-      <h1 className="text-3xl font-bold mb-6 text-center my-10">Faculty Details</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center my-10">
+        Faculty Details
+      </h1>
       {data &&
         Object.entries(data).map(([table, rows]) => renderTable(table, rows))}
       <div className="mt-6 text-center">

@@ -1,5 +1,4 @@
 import { connectToDatabase } from "../../app/config/dbconfig";
-import sql from "mssql";
 
 export default async function handler(req, res) {
   try {

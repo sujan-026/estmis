@@ -52,7 +52,7 @@ export default function Home() {
         .then((data) => {
           if (data && data.length > 0) {
             const studentData = data[0];
-            console.log(studentData);
+            // console.log(studentData);
             setStudentCounts({
               total_employee: studentData.total_employee,
               cs_faculty: studentData.CS,

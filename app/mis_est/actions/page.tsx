@@ -88,7 +88,7 @@ export default function AdminUserManagement() {
         const response = await fetch("/api/fetchBranch");
         if (!response.ok) throw new Error("Failed to fetch branch.");
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setBranch(data);
       } catch (error) {
         console.error("Error fetching branch:", error);

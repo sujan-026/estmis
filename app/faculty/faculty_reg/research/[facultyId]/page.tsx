@@ -2261,7 +2261,7 @@ useEffect(() => {
                       if (response.status === 200) {
                         console.log(response.data);
                         alert("Form submitted successfully!");
-                        router.push(`/mis_est`);
+                        router.push(`/mis_faculty/faculty_home`);
                         reset();
                         setCurrentStep(0); // Restart the form
                       }

@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { z } from "zod";
 import {
-  facultyPersonalDetailsSchema,
-  personalSchema,
+  facultyPersonalDetailsSchema
 } from "../../../schemas/personal-details";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
@@ -97,21 +96,6 @@ export default function Form() {
   const [facultyId, setFacultyId] = useState("");
   const delta = currentStep - previousStep;
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const departments = [
-    { code: "EI", title: "Electronics and Instrumentation Engineering" },
-    { code: "AE", title: "Aeronautical Engineering" },
-    { code: "ME", title: "Mechanical Engineering" },
-    { code: "EE", title: "Electrical Engineering" },
-    { code: "EC", title: "Electronics and Communication Engineering" },
-    { code: "CV", title: "Civil Engineering" },
-    { code: "CS", title: "Computer Science and Engineering" },
-    { code: "AI", title: "Artificial Intelligence and Machine Learning" },
-    { code: "CB", title: "Computer Science and Business System" },
-    { code: "ET", title: "Electronics and Telecommunication Engineering" },
-    { code: "IM", title: "Industrial Engineering and Management" },
-    { code: "IS", title: "Information Science and Engineering" },
-  ];
   const designations = [
     "Professor",
     "Assistant Professor",

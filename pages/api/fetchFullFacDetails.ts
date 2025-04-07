@@ -29,12 +29,12 @@
 //       WHERE [employee_id] = @employee_id
 //     `;
 
-//     const academicDetailsQuery = `
-//       SELECT
-//        [qualification], [department], [level], [designation]
-//       FROM [aittest].[dbo].[facultyAcademicDetails]
-//       WHERE [employee_id] = @employee_id
-//     `;
+    // const academicDetailsQuery = `
+    //   SELECT
+    //    [qualification], [department], [level], [designation]
+    //   FROM [aittest].[dbo].[facultyAcademicDetails]
+    //   WHERE [employee_id] = @employee_id
+    // `;
 
 //      // Fetch faculty education details
 //     const educationDetailsQuery = `

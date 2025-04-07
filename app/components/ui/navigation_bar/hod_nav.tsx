@@ -321,7 +321,7 @@ const HorizontalNavbar: React.FC = () => {
                   <FaChevronDown />
                 )}
               </div>
-              {openMenu === "consolidation" && (
+              {openMenu === "consolidation" && (  
                 <ul className="absolute left-0 bg-white text-black mt-2 shadow-lg rounded z-50">
                   {[
                     {
